@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/fragmentMain">
+    <fragment
+        android:id="@+id/fragmentMain"
+        android:name="ir.abolfazl.abolmovie.fragment.FragmentMain"
+        android:label="FragmentMain" >
+        <action
+            android:id="@+id/action_fragmentMain_to_fragmentMovie"
+            app:destination="@id/fragmentMovie" />
+        <action
+            android:id="@+id/action_fragmentMain_to_fragmentSerial"
+            app:destination="@id/fragmentSerial" />
+        <action
+            android:id="@+id/action_fragmentMain_to_fragmentIntro2"
+            app:destination="@id/navigation3" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentMovie"
+        android:name="ir.abolfazl.abolmovie.fragment.FragmentMovie"
+        android:label="FragmentMovie" >
+        <action
+            android:id="@+id/action_fragmentMovie_to_fragmentMain"
+            app:destination="@id/fragmentMain" />
+        <action
+            android:id="@+id/action_fragmentMovie_to_fragmentSerial"
+            app:destination="@id/fragmentSerial" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentSerial"
+        android:name="ir.abolfazl.abolmovie.fragment.FragmentSerial"
+        android:label="FragmentSerial" >
+        <action
+            android:id="@+id/action_fragmentSerial_to_fragmentMain"
+            app:destination="@id/fragmentMain" />
+        <action
+            android:id="@+id/action_fragmentSerial_to_fragmentMovie"
+            app:destination="@id/fragmentMovie" />
+    </fragment>
+    <navigation android:id="@+id/navigation3"
+        app:startDestination="@id/fragmentIntro2">
+        <fragment
+            android:id="@+id/fragmentLogin"
+            android:name="ir.abolfazl.abolmovie.fragment.FragmentLogin"
+            android:label="fragment_login"
+            tools:layout="@layout/fragment_login">
+            <action
+                android:id="@+id/action_fragmentLogin_to_fragmentMain"
+                app:destination="@id/fragmentMain" />
+        </fragment>
+        <fragment
+            android:id="@+id/fragmentIntro2"
+            android:name="ir.abolfazl.abolmovie.fragment.FragmentIntro"
+            android:label="fragment_intro"
+            tools:layout="@layout/fragment_intro">
+            <action
+                android:id="@+id/action_fragmentIntro2_to_fragmentLogin"
+                app:destination="@id/fragmentLogin" />
+        </fragment>
+    </navigation>
+</navigation>
