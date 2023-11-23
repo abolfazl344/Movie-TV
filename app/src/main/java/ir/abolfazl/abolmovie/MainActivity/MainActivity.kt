@@ -2,6 +2,7 @@ package ir.abolfazl.abolmovie.MainActivity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import cn.pedant.SweetAlert.SweetAlertDialog
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.ActivityMainBinding
 

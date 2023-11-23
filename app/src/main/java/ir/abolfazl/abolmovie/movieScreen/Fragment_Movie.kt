@@ -1,4 +1,4 @@
-package ir.abolfazl.abolmovie.fragment
+package ir.abolfazl.abolmovie.movieScreen
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -18,12 +19,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import ir.abolfazl.abolmovie.Activity.DetailActivity
-import ir.abolfazl.abolmovie.movieScreen.MovieAdapter
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.model.Movie
 import ir.abolfazl.abolmovie.databinding.FragmentMovieBinding
+import ir.abolfazl.abolmovie.fragment.FragmentMain
 import ir.abolfazl.abolmovie.model.MainRepository
-import ir.abolfazl.abolmovie.movieScreen.MovieScreenViewModel
 import ir.abolfazl.abolmovie.utils.asyncRequest
 import ir.abolfazl.abolmovie.utils.mainActivity
 import ir.abolfazl.abolmovie.utils.showToast
@@ -48,9 +48,27 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
         compositeDisposable = CompositeDisposable()
 
         discoverMovie()
+        compositeDisposable.add(movieScreenViewModel.progressBarSubjectMovie.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{
+                if(it){
+                    binding.progressMovie.visibility = View.VISIBLE
+                    binding.recyclerShowMovie.visibility = View.INVISIBLE
+                }else{
+                    binding.progressMovie.visibility = View.INVISIBLE
+                    binding.recyclerShowMovie.visibility = View.VISIBLE
+                }
+            })
 
         binding.swipeMovie.setOnRefreshListener {
             discoverMovie()
+            compositeDisposable.add(movieScreenViewModel.progressBarSubjectMovie.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{
+                if(it){
+                    binding.progressMovie.visibility = View.VISIBLE
+                    binding.recyclerShowMovie.visibility = View.INVISIBLE
+                }else{
+                    binding.progressMovie.visibility = View.INVISIBLE
+                    binding.recyclerShowMovie.visibility = View.VISIBLE
+                }
+            })
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.swipeMovie.isRefreshing = false
             }, 1500)
@@ -69,6 +87,10 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
 
             }
             true
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback {
+            requireActivity().finish()
         }
     }
 
@@ -90,16 +112,6 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
                 }
 
             })
-
-        compositeDisposable.add(movieScreenViewModel.progressBarSubjectMovie.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{
-            if(it){
-                binding.progressMovie.visibility = View.VISIBLE
-                binding.recyclerShowMovie.visibility = View.INVISIBLE
-            }else{
-                binding.progressMovie.visibility = View.INVISIBLE
-                binding.recyclerShowMovie.visibility = View.VISIBLE
-            }
-        })
     }
 
     private fun showDataInRecycler(data: List<Movie.Result>) {
@@ -123,4 +135,6 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
         super.onDestroy()
         compositeDisposable.clear()
     }
+
+
 }

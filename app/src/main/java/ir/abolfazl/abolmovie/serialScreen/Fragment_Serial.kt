@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -47,9 +49,32 @@ class FragmentSerial : Fragment(), SerialAdapter.ItemSelected {
         compositeDisposable = CompositeDisposable()
 
         discoverTv()
+        compositeDisposable.add(
+            serialScreenViewModel.progressBarSubjectTv.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                if (it) {
+                    binding.recyclerShowSerial.visibility = View.INVISIBLE
+                    binding.progressSerial.visibility = View.VISIBLE
+                } else {
+                    binding.recyclerShowSerial.visibility = View.VISIBLE
+                    binding.progressSerial.visibility = View.INVISIBLE
+                }
+            })
 
         binding.swipeSerial.setOnRefreshListener {
             discoverTv()
+            compositeDisposable.add(
+                serialScreenViewModel.progressBarSubjectTv.subscribeOn(
+                    Schedulers.io()
+                ).observeOn(AndroidSchedulers.mainThread()).subscribe {
+                    if (it) {
+                        binding.recyclerShowSerial.visibility = View.INVISIBLE
+                        binding.progressSerial.visibility = View.VISIBLE
+                    } else {
+                        binding.recyclerShowSerial.visibility = View.VISIBLE
+                        binding.progressSerial.visibility = View.INVISIBLE
+                    }
+                })
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.swipeSerial.isRefreshing = false
             }, 1500)
@@ -58,26 +83,20 @@ class FragmentSerial : Fragment(), SerialAdapter.ItemSelected {
 
         mainActivity().binding.bottomNavigation.setOnItemSelectedListener {
 
-            when(it.itemId){
-                R.id.btn_Home_menu ->{
+            when (it.itemId) {
+                R.id.btn_Home_menu -> {
                     findNavController().navigate(R.id.action_fragmentSerial_to_fragmentMain)
                 }
-                R.id.btn_Movie_menu ->{
+                R.id.btn_Movie_menu -> {
                     findNavController().navigate(R.id.action_fragmentSerial_to_fragmentMovie)
                 }
             }
             true
         }
 
-        compositeDisposable.add(serialScreenViewModel.progressBarSubjectTv.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{
-            if(it){
-                binding.recyclerShowSerial.visibility = View.INVISIBLE
-                binding.progressSerial.visibility = View.VISIBLE
-            }else{
-                binding.recyclerShowSerial.visibility = View.VISIBLE
-                binding.progressSerial.visibility = View.INVISIBLE
-            }
-        })
+        requireActivity().onBackPressedDispatcher.addCallback {
+            requireActivity().finish()
+        }
     }
 
     private fun discoverTv() {

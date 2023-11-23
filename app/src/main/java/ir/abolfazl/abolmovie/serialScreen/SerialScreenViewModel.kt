@@ -5,7 +5,7 @@ import io.reactivex.subjects.BehaviorSubject
 import ir.abolfazl.abolmovie.model.MainRepository
 import ir.abolfazl.abolmovie.model.Serial
 
-class SerialScreenViewModel(val mainRepository: MainRepository) {
+class SerialScreenViewModel(private val mainRepository: MainRepository) {
 
     val progressBarSubjectTv = BehaviorSubject.create<Boolean>()
 

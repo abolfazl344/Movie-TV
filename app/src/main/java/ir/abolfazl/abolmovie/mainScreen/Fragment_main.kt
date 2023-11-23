@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -50,12 +51,14 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
         compositeDisposable = CompositeDisposable()
 
         firstRun()
-        initUi()
-
         mainActivity().binding.bottomNavigation.visibility = View.VISIBLE
+
+            initUi()
+            progressBar()
 
         binding.refreshLayoutMain.setOnRefreshListener {
             initUi()
+            progressBar()
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.refreshLayoutMain.isRefreshing = false
             }, 1500)
@@ -75,8 +78,9 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
             true
         }
 
-        progressBar()
-
+        requireActivity().onBackPressedDispatcher.addCallback {
+            requireActivity().finish()
+        }
     }
 
     private fun progressBar() {

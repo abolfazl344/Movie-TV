@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentMovie"
-        android:name="ir.abolfazl.abolmovie.fragment.FragmentMovie"
+        android:name="ir.abolfazl.abolmovie.movieScreen.FragmentMovie"
         android:label="FragmentMovie" >
         <action
             android:id="@+id/action_fragmentMovie_to_fragmentMain"
@@ -39,6 +39,7 @@
         <action
             android:id="@+id/action_fragmentSerial_to_fragmentMovie"
             app:destination="@id/fragmentMovie" />
+
     </fragment>
     <navigation android:id="@+id/navigation3"
         app:startDestination="@id/fragmentIntro2">
