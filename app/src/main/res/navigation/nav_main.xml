@@ -6,7 +6,7 @@
     app:startDestination="@id/fragmentMain">
     <fragment
         android:id="@+id/fragmentMain"
-        android:name="ir.abolfazl.abolmovie.fragment.FragmentMain"
+        android:name="ir.abolfazl.abolmovie.mainScreen.FragmentMain"
         android:label="FragmentMain" >
         <action
             android:id="@+id/action_fragmentMain_to_fragmentMovie"
@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_fragmentMain_to_fragmentIntro2"
             app:destination="@id/navigation3" />
+        <action
+            android:id="@+id/action_fragmentMain_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragmentMovie"
@@ -28,10 +31,13 @@
         <action
             android:id="@+id/action_fragmentMovie_to_fragmentSerial"
             app:destination="@id/fragmentSerial" />
+        <action
+            android:id="@+id/action_fragmentMovie_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragmentSerial"
-        android:name="ir.abolfazl.abolmovie.fragment.FragmentSerial"
+        android:name="ir.abolfazl.abolmovie.serialScreen.FragmentSerial"
         android:label="FragmentSerial" >
         <action
             android:id="@+id/action_fragmentSerial_to_fragmentMain"
@@ -39,6 +45,9 @@
         <action
             android:id="@+id/action_fragmentSerial_to_fragmentMovie"
             app:destination="@id/fragmentMovie" />
+        <action
+            android:id="@+id/action_fragmentSerial_to_searchFragment"
+            app:destination="@id/searchFragment" />
 
     </fragment>
     <navigation android:id="@+id/navigation3"
@@ -62,4 +71,19 @@
                 app:destination="@id/fragmentLogin" />
         </fragment>
     </navigation>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="ir.abolfazl.abolmovie.searchScreen.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_fragmentMovie"
+            app:destination="@id/fragmentMovie" />
+        <action
+            android:id="@+id/action_searchFragment_to_fragmentSerial"
+            app:destination="@id/fragmentSerial" />
+        <action
+            android:id="@+id/action_searchFragment_to_fragmentMain"
+            app:destination="@id/fragmentMain" />
+    </fragment>
 </navigation>

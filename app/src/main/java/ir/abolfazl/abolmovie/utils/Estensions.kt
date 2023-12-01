@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import ir.abolfazl.abolmovie.MainActivity.MainActivity
+import ir.abolfazl.abolmovie.Activity.MainActivity
 
 fun Fragment.mainActivity(): MainActivity {
     return requireActivity() as MainActivity

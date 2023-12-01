@@ -4,8 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.bumptech.glide.Glide
 import ir.abolfazl.abolmovie.apiManager.BASE_URL_IMAGE
-import ir.abolfazl.abolmovie.model.Movie
-import ir.abolfazl.abolmovie.model.Serial
+import ir.abolfazl.abolmovie.model.Movie_Tv
 import ir.abolfazl.abolmovie.databinding.ActivityDetailBinding
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 
@@ -17,55 +16,38 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val dataMovie = intent.getParcelableExtra<Movie.Result>("dataMovie")
-        val dataSerial = intent.getParcelableExtra<Serial.Result>("dataSerial")
+        val dataMovie = intent.getParcelableExtra<Movie_Tv.Result>("SendData")
 
-        if (dataMovie != null) {
+        Glide
+            .with(this)
+            .load(BASE_URL_IMAGE + dataMovie!!.posterPath)
+            .transform(RoundedCornersTransformation(32, 8))
+            .into(binding.imgPoster)
 
-            Glide
-                .with(this)
-                .load(BASE_URL_IMAGE + dataMovie.posterPath)
-                .transform(RoundedCornersTransformation(32, 8))
-                .into(binding.imgPoster)
+        Glide
+            .with(this)
+            .load(BASE_URL_IMAGE + dataMovie.backdropPath)
+            .into(binding.imgBackImage)
 
-            Glide
-                .with(this)
-                .load(BASE_URL_IMAGE + dataMovie.backdropPath)
-                .into(binding.imgBackImage)
-
+        if (dataMovie.releaseDate != null) {
             binding.txtRelease.text = dataMovie.releaseDate
-            binding.txtScore.text = dataMovie.voteAverage.toString()
-            binding.txtInfoMovie.text = dataMovie.overview
+        } else if (dataMovie.firstAirDate != null) {
+            binding.txtRelease.text = dataMovie.firstAirDate
+        }
+        if (dataMovie.title != null) {
             binding.txtTitle.text = dataMovie.title
-            binding.txtTime.text = dataMovie.originalLanguage
-
-            binding.imgBackToHome.setOnClickListener {
-                onBackPressed()
-            }
+        } else if (dataMovie.name != null) {
+            binding.txtTitle.text = dataMovie.name
         }
 
-        if (dataSerial != null) {
+        binding.txtScore.text = dataMovie.voteAverage.toString()
+        binding.txtInfoMovie.text = dataMovie.overview
+        binding.txtTime.text = dataMovie.originalLanguage
 
-            Glide
-                .with(this)
-                .load(BASE_URL_IMAGE + dataSerial.posterPath)
-                .transform(RoundedCornersTransformation(32, 8))
-                .into(binding.imgPoster)
+        binding.imgBackToHome.setOnClickListener {
+            onBackPressed()
 
-            Glide
-                .with(this)
-                .load(BASE_URL_IMAGE + dataSerial.backdropPath)
-                .into(binding.imgBackImage)
-
-            binding.txtRelease.text = dataSerial.firstAirDate
-            binding.txtScore.text = dataSerial.voteAverage.toString()
-            binding.txtInfoMovie.text = dataSerial.overview
-            binding.txtTitle.text = dataSerial.name
-            binding.txtTime.text = dataSerial.originalLanguage
-
-            binding.imgBackToHome.setOnClickListener {
-                onBackPressed()
-            }
         }
+
     }
 }

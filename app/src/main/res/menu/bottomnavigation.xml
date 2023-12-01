@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/btn_favorite_menu"
-        android:icon="@drawable/btn_2"
-        android:title="Favorite" />
+        android:id="@+id/btn_search_menu"
+        android:icon="@drawable/search"
+        android:title="Search" />
 
     <item
         android:id="@+id/btn_Movie_menu"

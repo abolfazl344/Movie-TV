@@ -20,9 +20,9 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import ir.abolfazl.abolmovie.Activity.DetailActivity
 import ir.abolfazl.abolmovie.R
-import ir.abolfazl.abolmovie.model.Movie
+import ir.abolfazl.abolmovie.model.Movie_Tv
 import ir.abolfazl.abolmovie.databinding.FragmentMovieBinding
-import ir.abolfazl.abolmovie.fragment.FragmentMain
+import ir.abolfazl.abolmovie.mainScreen.FragmentMain
 import ir.abolfazl.abolmovie.model.MainRepository
 import ir.abolfazl.abolmovie.utils.asyncRequest
 import ir.abolfazl.abolmovie.utils.mainActivity
@@ -84,7 +84,9 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
                 R.id.btn_TV_menu ->{
                     findNavController().navigate(R.id.action_fragmentMovie_to_fragmentSerial)
                 }
-
+                R.id.btn_search_menu ->{
+                    findNavController().navigate(R.id.action_fragmentMovie_to_searchFragment)
+                }
             }
             true
         }
@@ -98,12 +100,12 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
         movieScreenViewModel
             .discoverMovie()
             .asyncRequest()
-            .subscribe(object : SingleObserver<Movie>{
+            .subscribe(object : SingleObserver<Movie_Tv>{
                 override fun onSubscribe(d: Disposable) {
                     compositeDisposable.add(d)
                 }
 
-                override fun onSuccess(t: Movie) {
+                override fun onSuccess(t: Movie_Tv) {
                     showDataInRecycler(t.results)
                 }
 
@@ -114,7 +116,7 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
             })
     }
 
-    private fun showDataInRecycler(data: List<Movie.Result>) {
+    private fun showDataInRecycler(data: List<Movie_Tv.Result>) {
 
         val movieAdapter = MovieAdapter(ArrayList(data),this)
         binding.recyclerShowMovie.adapter = movieAdapter
@@ -122,11 +124,11 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
         binding.recyclerShowMovie.recycledViewPool.setMaxRecycledViews(0, 0)
     }
 
-    override fun itemSelected(movie: Movie.Result) {
+    override fun itemSelected(movie: Movie_Tv.Result) {
 
         val intent = Intent(requireContext(), DetailActivity::class.java)
 
-        intent.putExtra("dataMovie", movie)
+        intent.putExtra("SendData", movie)
 
         startActivity(intent)
     }

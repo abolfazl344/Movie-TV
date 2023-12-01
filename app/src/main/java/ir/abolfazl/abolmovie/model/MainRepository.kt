@@ -39,28 +39,34 @@ class MainRepository {
         apiService = retrofit.create(ApiService::class.java)
     }
 
-    fun getPopularMovie() : Single<Movie> {
+    fun getPopularMovie() : Single<Movie_Tv> {
 
         return apiService.getPopularMovie()
     }
 
-    fun getTopMovie() : Single<Movie>{
+    fun getTopMovie() : Single<Movie_Tv>{
 
         return apiService.getTopMovie()
     }
 
-    fun getNowPlaying() : Single<Movie>{
+    fun getNowPlaying() : Single<Movie_Tv>{
 
         return apiService.getNowPlayingMovie()
     }
 
-    fun discoverMovie() : Single<Movie>{
+    fun discoverMovie() : Single<Movie_Tv>{
 
         return apiService.discoverMovie()
     }
 
-    fun discoverSerial() : Single<Serial>{
+    fun discoverSerial() : Single<Movie_Tv>{
 
         return apiService.discoverSerial()
     }
+
+    fun searchMovie(title : String) : Single<Movie_Tv>{
+
+        return apiService.searchMovie(title)
+    }
+
 }

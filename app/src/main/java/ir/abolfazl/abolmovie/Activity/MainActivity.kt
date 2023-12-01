@@ -1,7 +1,8 @@
-package ir.abolfazl.abolmovie.MainActivity
+package ir.abolfazl.abolmovie.Activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.navigation.findNavController
 import cn.pedant.SweetAlert.SweetAlertDialog
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.ActivityMainBinding

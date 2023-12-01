@@ -20,7 +20,7 @@
             android:name="ir.abolfazl.abolmovie.Activity.DetailActivity"
             android:exported="false" />
         <activity
-            android:name="ir.abolfazl.abolmovie.MainActivity.MainActivity"
+            android:name="ir.abolfazl.abolmovie.Activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

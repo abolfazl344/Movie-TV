@@ -3,7 +3,7 @@ package ir.abolfazl.abolmovie.mainScreen
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import ir.abolfazl.abolmovie.model.MainRepository
-import ir.abolfazl.abolmovie.model.Movie
+import ir.abolfazl.abolmovie.model.Movie_Tv
 
 class MainScreenViewModel(private val mainRepository: MainRepository) {
 
@@ -11,17 +11,17 @@ class MainScreenViewModel(private val mainRepository: MainRepository) {
     val progressBarSubjectTop = BehaviorSubject.create<Boolean>()
     val progressBarSubjectNow = BehaviorSubject.create<Boolean>()
 
-    fun getPopularMovie(): Single<Movie> {
+    fun getPopularMovie(): Single<Movie_Tv> {
         progressBarSubjectPop.onNext(true)
         return mainRepository.getPopularMovie().doFinally { progressBarSubjectPop.onNext(false) }
     }
 
-    fun getTopMovie(): Single<Movie> {
+    fun getTopMovie(): Single<Movie_Tv> {
         progressBarSubjectTop.onNext(true)
         return mainRepository.getTopMovie().doFinally { progressBarSubjectTop.onNext(false) }
     }
 
-    fun getNowPlaying(): Single<Movie> {
+    fun getNowPlaying(): Single<Movie_Tv> {
         progressBarSubjectNow.onNext(true)
         return mainRepository.getNowPlaying().doFinally { progressBarSubjectNow.onNext(false) }
     }

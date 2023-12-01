@@ -1,6 +1,6 @@
-package ir.abolfazl.abolmovie.fragment
+package ir.abolfazl.abolmovie.mainScreen
 
-
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -18,12 +18,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import ir.abolfazl.abolmovie.Activity.DetailActivity
 import ir.abolfazl.abolmovie.movieScreen.MovieAdapter
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentMainBinding
-import ir.abolfazl.abolmovie.mainScreen.MainScreenViewModel
 import ir.abolfazl.abolmovie.model.MainRepository
-import ir.abolfazl.abolmovie.model.Movie
+import ir.abolfazl.abolmovie.model.Movie_Tv
 import ir.abolfazl.abolmovie.utils.asyncRequest
 import ir.abolfazl.abolmovie.utils.mainActivity
 import java.util.*
@@ -70,9 +70,11 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
                 R.id.btn_TV_menu -> {
                     findNavController().navigate(R.id.action_fragmentMain_to_fragmentSerial)
                 }
-
                 R.id.btn_Movie_menu -> {
                     findNavController().navigate(R.id.action_fragmentMain_to_fragmentMovie)
+                }
+                R.id.btn_search_menu -> {
+                    findNavController().navigate(R.id.action_fragmentMain_to_searchFragment)
                 }
             }
             true
@@ -138,13 +140,13 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
         mainScreenViewModel
             .getTopMovie()
             .asyncRequest()
-            .subscribe(object : SingleObserver<Movie> {
+            .subscribe(object : SingleObserver<Movie_Tv> {
                 override fun onSubscribe(d: Disposable) {
                     compositeDisposable.add(d)
 
                 }
 
-                override fun onSuccess(t: Movie) {
+                override fun onSuccess(t: Movie_Tv) {
                     showDataInRecyclerTopRated(t.results)
                 }
 
@@ -158,12 +160,12 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
         mainScreenViewModel
             .getPopularMovie()
             .asyncRequest()
-            .subscribe(object : SingleObserver<Movie> {
+            .subscribe(object : SingleObserver<Movie_Tv> {
                 override fun onSubscribe(d: Disposable) {
                    compositeDisposable.add(d)
                 }
 
-                override fun onSuccess(t: Movie) {
+                override fun onSuccess(t: Movie_Tv) {
                     showDataInRecyclerPopularMovie(t.results)
                 }
 
@@ -178,12 +180,12 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
         mainScreenViewModel
             .getNowPlaying()
             .asyncRequest()
-            .subscribe(object : SingleObserver<Movie> {
+            .subscribe(object : SingleObserver<Movie_Tv> {
                 override fun onSubscribe(d: Disposable) {
                     compositeDisposable.add(d)
                 }
 
-                override fun onSuccess(t: Movie) {
+                override fun onSuccess(t: Movie_Tv) {
                     showDataInRecyclerNowPlaying(t.results)
                 }
 
@@ -195,7 +197,7 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
             })
     }
 
-    private fun showDataSearched(data: List<Movie.Result>) {
+    private fun showDataSearched(data: List<Movie_Tv.Result>) {
 
         val mainAdapter = MovieAdapter(ArrayList(data), this)
         binding.recyclerNowPlaying.adapter = mainAdapter
@@ -205,11 +207,16 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
 
     }
 
-    override fun itemSelected(movie: Movie.Result) {
+    override fun itemSelected(movie: Movie_Tv.Result) {
 
+        val intent = Intent(requireContext(), DetailActivity::class.java)
+
+        intent.putExtra("SendData", movie)
+
+        startActivity(intent)
     }
 
-    private fun showDataInRecyclerNowPlaying(data: List<Movie.Result>) {
+    private fun showDataInRecyclerNowPlaying(data: List<Movie_Tv.Result>) {
 
         val mainAdapter = MovieAdapter(ArrayList(data), this)
         binding.recyclerNowPlaying.adapter = mainAdapter
@@ -219,7 +226,7 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
 
     }
 
-    private fun showDataInRecyclerTopRated(data: List<Movie.Result>) {
+    private fun showDataInRecyclerTopRated(data: List<Movie_Tv.Result>) {
         val mainAdapter = MovieAdapter(ArrayList(data), this)
         binding.recyclerToprated.adapter = mainAdapter
         binding.recyclerToprated.layoutManager =
@@ -227,7 +234,7 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
         binding.recyclerToprated.recycledViewPool.setMaxRecycledViews(0, 0)
     }
 
-    private fun showDataInRecyclerPopularMovie(data: List<Movie.Result>) {
+    private fun showDataInRecyclerPopularMovie(data: List<Movie_Tv.Result>) {
 
         val mainAdapter = MovieAdapter(ArrayList(data), this)
         binding.recyclerNewMovie.adapter = mainAdapter

@@ -7,20 +7,20 @@ import retrofit2.http.Query
 interface ApiService {
 
     @GET("movie/popular")
-    fun getPopularMovie(@Query("page") page:Int = 1) : Single<Movie>
+    fun getPopularMovie(@Query("page") page:Int = 1) : Single<Movie_Tv>
 
     @GET("movie/top_rated")
-    fun getTopMovie(@Query("page") page:Int = 1) : Single<Movie>
+    fun getTopMovie(@Query("page") page:Int = 1) : Single<Movie_Tv>
 
     @GET("movie/now_playing")
-    fun getNowPlayingMovie(@Query("page") page:Int = 1) : Single<Movie>
+    fun getNowPlayingMovie(@Query("page") page:Int = 1) : Single<Movie_Tv>
 
     @GET("search/movie")
-    fun searchMovie(@Query("query") query:String) : Single<Movie.Result>
+    fun searchMovie(@Query("query") query:String) : Single<Movie_Tv>
 
     @GET("discover/movie")
-    fun discoverMovie(@Query("page") page : Int = 1) : Single<Movie>
+    fun discoverMovie(@Query("page") page : Int = 1) : Single<Movie_Tv>
 
     @GET("discover/tv")
-    fun discoverSerial(@Query("page") page : Int = 1) : Single<Serial>
+    fun discoverSerial(@Query("page") page : Int = 1) : Single<Movie_Tv>
 }

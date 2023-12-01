@@ -6,17 +6,22 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ir.abolfazl.abolmovie.apiManager.BASE_URL_IMAGE
-import ir.abolfazl.abolmovie.model.Movie
+import ir.abolfazl.abolmovie.model.Movie_Tv
 import ir.abolfazl.abolmovie.databinding.ItemRecyclerMovieBinding
-import ir.abolfazl.abolmovie.fragment.FragmentMain
+import ir.abolfazl.abolmovie.mainScreen.FragmentMain
 
-class MovieAdapter(val data: ArrayList<Movie.Result>, val selectedItem: ItemSelected) : RecyclerView.Adapter<MovieAdapter.MainViewHolder>() {
+class MovieAdapter(val data: ArrayList<Movie_Tv.Result>, val selectedItem: ItemSelected) : RecyclerView.Adapter<MovieAdapter.MainViewHolder>() {
     lateinit var binding : ItemRecyclerMovieBinding
 
     inner class MainViewHolder(itemview : View) : RecyclerView.ViewHolder(itemview){
 
-        fun bindData(movie: Movie.Result){
-            binding.txtItemMovieTitle.text = movie.title
+        fun bindData(movie: Movie_Tv.Result){
+            if(movie.title != null){
+                binding.txtItemMovieTitle.text = movie.title
+            }else if(movie.name != null){
+                binding.txtItemMovieTitle.text = movie.name
+            }
+
             binding.txtScoreMovie.text = movie.voteAverage.toString()
 
             Glide
@@ -47,6 +52,6 @@ class MovieAdapter(val data: ArrayList<Movie.Result>, val selectedItem: ItemSele
 
     interface ItemSelected{
 
-        fun itemSelected(movie: Movie.Result)
+        fun itemSelected(movie: Movie_Tv.Result)
     }
 }
