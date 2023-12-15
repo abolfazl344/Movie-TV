@@ -50,7 +50,7 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
         mainScreenViewModel = MainScreenViewModel(MainRepository())
         compositeDisposable = CompositeDisposable()
 
-        firstRun()
+        //firstRun()
         mainActivity().binding.bottomNavigation.visibility = View.VISIBLE
 
             initUi()

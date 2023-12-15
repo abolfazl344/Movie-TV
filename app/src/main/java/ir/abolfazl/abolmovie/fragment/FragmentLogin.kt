@@ -13,11 +13,6 @@ import ir.abolfazl.abolmovie.utils.mainActivity
 class FragmentLogin : Fragment() {
     lateinit var binding: FragmentLoginBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,6 +26,10 @@ class FragmentLogin : Fragment() {
 
         binding.btnLogin.setOnClickListener {
             findNavController().navigate(R.id.fragmentMain)
+        }
+
+        binding.txtSignUp.setOnClickListener {
+            findNavController().navigate(R.id.action_fragmentLogin_to_signUpFragment)
         }
     }
 

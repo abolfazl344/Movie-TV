@@ -64,14 +64,16 @@ class SearchFragment : Fragment(), MovieAdapter.ItemSelected {
             true
         }
 
-        binding.edtSearch.setOnKeyListener { v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN) {
-                searchMovie(binding.edtSearch.text.toString())
-                return@setOnKeyListener true
+        binding.edtSearch.addTextChangedListener {
+            if(it.toString().isNotEmpty()){
+                searchMovie(it.toString())
+                if(!binding.recyclerSearch.isVisible){
+                    binding.recyclerSearch.visibility = View.VISIBLE
+                }
+            }else if(it.toString().isEmpty()){
+                binding.recyclerSearch.visibility = View.INVISIBLE
             }
-            return@setOnKeyListener false
         }
-
 
         requireActivity().onBackPressedDispatcher.addCallback {
             requireActivity().finish()
