@@ -20,6 +20,9 @@
         <action
             android:id="@+id/action_fragmentMain_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <argument
+            android:name="userDetail"
+            app:argType="ir.abolfazl.abolmovie.model.Local.UserInfo" />
     </fragment>
     <fragment
         android:id="@+id/fragmentMovie"

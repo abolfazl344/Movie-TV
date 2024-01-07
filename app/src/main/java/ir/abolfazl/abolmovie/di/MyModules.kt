@@ -3,6 +3,9 @@ package ir.abolfazl.abolmovie.di
 import android.content.Context
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -65,5 +68,12 @@ object MyModules {
     @Singleton
     fun provideRepository(apiService: ApiService) : MainRepository{
         return MainRepository(apiService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebase() : FirebaseAuth {
+
+        return Firebase.auth
     }
 }

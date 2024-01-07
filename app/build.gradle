@@ -4,6 +4,8 @@ plugins {
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'com.google.gms.google-services'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -58,7 +60,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
 
     //glide
-    implementation 'com.github.bumptech.glide:glide:4.15.1'
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
     implementation 'jp.wasabeef:glide-transformations:4.3.0'
 
     //sparkButton
@@ -83,11 +85,14 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 
-    implementation("androidx.activity:activity-ktx:1.5.1")
+    implementation("androidx.activity:activity-ktx:1.8.2")
 
     //hilt
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
+
+    //firebase
+    implementation 'com.google.firebase:firebase-auth:22.3.0'
 }
 kapt {
     correctErrorTypes true

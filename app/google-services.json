@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "821925420260",
+    "project_id": "abolmovie-4948a",
+    "storage_bucket": "abolmovie-4948a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:821925420260:android:225a702529c106cde2a0f1",
+        "android_client_info": {
+          "package_name": "ir.abolfazl.abolmovie"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXGLwumrbDlzENsNugtlEcnEs3Sc737oo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
