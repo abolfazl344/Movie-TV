@@ -8,30 +8,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
-
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import io.reactivex.SingleObserver
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.Activity.DetailActivity
 import ir.abolfazl.abolmovie.R
-import ir.abolfazl.abolmovie.model.Movie_Tv
+import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import ir.abolfazl.abolmovie.databinding.FragmentMovieBinding
 import ir.abolfazl.abolmovie.mainScreen.FragmentMain
-import ir.abolfazl.abolmovie.model.MainRepository
-import ir.abolfazl.abolmovie.utils.asyncRequest
 import ir.abolfazl.abolmovie.utils.mainActivity
-import ir.abolfazl.abolmovie.utils.showToast
 
+@AndroidEntryPoint
 class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
-    lateinit var binding: FragmentMovieBinding
-    lateinit var movieScreenViewModel: MovieScreenViewModel
-    lateinit var compositeDisposable: CompositeDisposable
+    private lateinit var binding: FragmentMovieBinding
+    private val movieScreenViewModel: MovieScreenViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,31 +37,11 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         FragmentMain.ItemCount = 20
-        movieScreenViewModel = MovieScreenViewModel(MainRepository())
-        compositeDisposable = CompositeDisposable()
 
         discoverMovie()
-        compositeDisposable.add(movieScreenViewModel.progressBarSubjectMovie.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{
-                if(it){
-                    binding.progressMovie.visibility = View.VISIBLE
-                    binding.recyclerShowMovie.visibility = View.INVISIBLE
-                }else{
-                    binding.progressMovie.visibility = View.INVISIBLE
-                    binding.recyclerShowMovie.visibility = View.VISIBLE
-                }
-            })
 
         binding.swipeMovie.setOnRefreshListener {
             discoverMovie()
-            compositeDisposable.add(movieScreenViewModel.progressBarSubjectMovie.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe{
-                if(it){
-                    binding.progressMovie.visibility = View.VISIBLE
-                    binding.recyclerShowMovie.visibility = View.INVISIBLE
-                }else{
-                    binding.progressMovie.visibility = View.INVISIBLE
-                    binding.recyclerShowMovie.visibility = View.VISIBLE
-                }
-            })
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.swipeMovie.isRefreshing = false
             }, 1500)
@@ -77,14 +50,16 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
 
         mainActivity().binding.bottomNavigation.setOnItemSelectedListener {
 
-            when(it.itemId){
-                R.id.btn_Home_menu ->{
+            when (it.itemId) {
+                R.id.btn_Home_menu -> {
                     findNavController().navigate(R.id.action_fragmentMovie_to_fragmentMain)
                 }
-                R.id.btn_TV_menu ->{
+
+                R.id.btn_TV_menu -> {
                     findNavController().navigate(R.id.action_fragmentMovie_to_fragmentSerial)
                 }
-                R.id.btn_search_menu ->{
+
+                R.id.btn_search_menu -> {
                     findNavController().navigate(R.id.action_fragmentMovie_to_searchFragment)
                 }
             }
@@ -96,31 +71,19 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
         }
     }
 
-    private fun discoverMovie(){
-        movieScreenViewModel
-            .discoverMovie()
-            .asyncRequest()
-            .subscribe(object : SingleObserver<Movie_Tv>{
-                override fun onSubscribe(d: Disposable) {
-                    compositeDisposable.add(d)
-                }
-
-                override fun onSuccess(t: Movie_Tv) {
-                    showDataInRecycler(t.results)
-                }
-
-                override fun onError(e: Throwable) {
-                    requireActivity().showToast("check your internet connection")
-                }
-
-            })
+    private fun discoverMovie() {
+        movieScreenViewModel.discoverMovie()
+        movieScreenViewModel.discoverMovie.observe(viewLifecycleOwner){
+            showDataInRecycler(it.results)
+        }
     }
 
     private fun showDataInRecycler(data: List<Movie_Tv.Result>) {
 
-        val movieAdapter = MovieAdapter(ArrayList(data),this)
+        val movieAdapter = MovieAdapter(ArrayList(data), this)
         binding.recyclerShowMovie.adapter = movieAdapter
-        binding.recyclerShowMovie.layoutManager = GridLayoutManager(requireContext(),3,LinearLayoutManager.VERTICAL,false)
+        binding.recyclerShowMovie.layoutManager =
+            GridLayoutManager(requireContext(), 3, LinearLayoutManager.VERTICAL, false)
         binding.recyclerShowMovie.recycledViewPool.setMaxRecycledViews(0, 0)
     }
 
@@ -132,11 +95,5 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
 
         startActivity(intent)
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.clear()
-    }
-
 
 }

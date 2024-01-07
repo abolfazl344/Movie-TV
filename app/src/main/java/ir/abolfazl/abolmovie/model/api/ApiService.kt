@@ -1,6 +1,8 @@
-package ir.abolfazl.abolmovie.model
+package ir.abolfazl.abolmovie.model.api
 
+import androidx.lifecycle.LiveData
 import io.reactivex.Single
+import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import retrofit2.http.GET
 import retrofit2.http.Query
 

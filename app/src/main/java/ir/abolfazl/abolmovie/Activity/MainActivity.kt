@@ -2,11 +2,11 @@ package ir.abolfazl.abolmovie.Activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.navigation.findNavController
-import cn.pedant.SweetAlert.SweetAlertDialog
+import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.ActivityMainBinding
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
 

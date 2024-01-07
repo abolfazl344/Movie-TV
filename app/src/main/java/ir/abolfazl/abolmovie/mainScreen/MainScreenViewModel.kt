@@ -1,28 +1,93 @@
 package ir.abolfazl.abolmovie.mainScreen
 
-import io.reactivex.Single
-import io.reactivex.subjects.BehaviorSubject
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.SingleObserver
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import ir.abolfazl.abolmovie.model.MainRepository
-import ir.abolfazl.abolmovie.model.Movie_Tv
+import ir.abolfazl.abolmovie.model.Local.Movie_Tv
+import javax.inject.Inject
 
-class MainScreenViewModel(private val mainRepository: MainRepository) {
 
-    val progressBarSubjectPop = BehaviorSubject.create<Boolean>()
-    val progressBarSubjectTop = BehaviorSubject.create<Boolean>()
-    val progressBarSubjectNow = BehaviorSubject.create<Boolean>()
+@HiltViewModel
+class MainScreenViewModel @Inject constructor(private val mainRepository: MainRepository) : ViewModel() {
 
-    fun getPopularMovie(): Single<Movie_Tv> {
-        progressBarSubjectPop.onNext(true)
-        return mainRepository.getPopularMovie().doFinally { progressBarSubjectPop.onNext(false) }
+    private val compositeDisposable = CompositeDisposable()
+
+    private val _popularMovies = MutableLiveData<Movie_Tv>()
+    val popularMovie get() : LiveData<Movie_Tv> = _popularMovies
+
+    private val _topMovies = MutableLiveData<Movie_Tv>()
+    val topMovie get() : LiveData<Movie_Tv> = _topMovies
+
+    private val _nowMovies = MutableLiveData<Movie_Tv>()
+    val nowMovie get() : LiveData<Movie_Tv> = _nowMovies
+
+    fun getPopularMovie() {
+        mainRepository.getPopularMovie()
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : SingleObserver<Movie_Tv> {
+                override fun onSubscribe(d: Disposable) {
+                compositeDisposable.add(d)
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.v("testLog", e.message.toString())
+                }
+
+                override fun onSuccess(t: Movie_Tv) {
+                    _popularMovies.postValue(t)
+                }
+
+            })
     }
 
-    fun getTopMovie(): Single<Movie_Tv> {
-        progressBarSubjectTop.onNext(true)
-        return mainRepository.getTopMovie().doFinally { progressBarSubjectTop.onNext(false) }
+    fun getTopMovie() {
+        mainRepository.getTopMovie()
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : SingleObserver<Movie_Tv> {
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.v("testLog", e.message.toString())
+                }
+
+                override fun onSuccess(t: Movie_Tv) {
+                    _topMovies.postValue(t)
+                }
+
+            })
     }
 
-    fun getNowPlaying(): Single<Movie_Tv> {
-        progressBarSubjectNow.onNext(true)
-        return mainRepository.getNowPlaying().doFinally { progressBarSubjectNow.onNext(false) }
+    fun getNowPlaying() {
+
+        mainRepository.getNowPlaying()
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : SingleObserver<Movie_Tv> {
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.v("testLog", e.message.toString())
+                }
+
+                override fun onSuccess(t: Movie_Tv) {
+                    _nowMovies.postValue(t)
+                }
+
+            })
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
     }
 }

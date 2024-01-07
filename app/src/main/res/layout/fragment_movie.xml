@@ -29,13 +29,4 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <ProgressBar
-        android:id="@+id/progress_movie"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/swipe_Movie"
-        app:layout_constraintEnd_toEndOf="@+id/swipe_Movie"
-        app:layout_constraintStart_toStartOf="@+id/swipe_Movie"
-        app:layout_constraintTop_toTopOf="@+id/swipe_Movie" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

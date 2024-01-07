@@ -1,4 +1,4 @@
-package ir.abolfazl.abolmovie.model
+package ir.abolfazl.abolmovie.model.Local
 
 
 import com.google.gson.annotations.SerializedName
@@ -18,18 +18,10 @@ data class Movie_Tv(
 ) : Parcelable {
     @Parcelize
     data class Result(
-        @SerializedName("adult")
-        val adult: Boolean,
         @SerializedName("backdrop_path")
         val backdropPath: String? = null,
-        @SerializedName("genre_ids")
-        val genreIds: List<Int>,
-        @SerializedName("id")
-        val id: Int,
         @SerializedName("original_language")
         val originalLanguage: String,
-        @SerializedName("original_title")
-        val originalTitle: String? = null,
         @SerializedName("overview")
         val overview: String,
         @SerializedName("popularity")

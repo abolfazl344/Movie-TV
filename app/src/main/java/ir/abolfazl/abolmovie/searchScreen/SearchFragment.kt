@@ -1,12 +1,7 @@
 package ir.abolfazl.abolmovie.searchScreen
 
 import android.content.Intent
-import android.opengl.Visibility
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
-import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,26 +9,26 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import io.reactivex.SingleObserver
-import io.reactivex.disposables.Disposable
+import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.Activity.DetailActivity
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentSearchBinding
-import ir.abolfazl.abolmovie.model.MainRepository
-import ir.abolfazl.abolmovie.model.Movie_Tv
+import ir.abolfazl.abolmovie.model.Local.Movie_Tv
+import ir.abolfazl.abolmovie.model.api.ApiService
 import ir.abolfazl.abolmovie.movieScreen.MovieAdapter
-import ir.abolfazl.abolmovie.utils.asyncRequest
 import ir.abolfazl.abolmovie.utils.mainActivity
-import ir.abolfazl.abolmovie.utils.showToast
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SearchFragment : Fragment(), MovieAdapter.ItemSelected {
     lateinit var binding: FragmentSearchBinding
-    lateinit var searchScreenViewModel: SearchScreenViewModel
-    lateinit var disposable: Disposable
+    @Inject
+    lateinit var apiService: ApiService
+    private val searchScreenViewModel: SearchScreenViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +40,6 @@ class SearchFragment : Fragment(), MovieAdapter.ItemSelected {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        searchScreenViewModel = SearchScreenViewModel(MainRepository())
 
         mainActivity().binding.bottomNavigation.setOnItemSelectedListener {
 
@@ -64,13 +58,17 @@ class SearchFragment : Fragment(), MovieAdapter.ItemSelected {
             true
         }
 
-        binding.edtSearch.addTextChangedListener {
-            if(it.toString().isNotEmpty()){
-                searchMovie(it.toString())
+
+        binding.edtSearch.addTextChangedListener { txt ->
+            if(txt.toString().isNotEmpty()){
+                searchScreenViewModel.searchMovie(txt.toString())
+                searchScreenViewModel.searchMovies.observe(viewLifecycleOwner){
+                    showDataInRecycler(it.results)
+                }
                 if(!binding.recyclerSearch.isVisible){
                     binding.recyclerSearch.visibility = View.VISIBLE
                 }
-            }else if(it.toString().isEmpty()){
+            }else if(txt.toString().isEmpty()){
                 binding.recyclerSearch.visibility = View.INVISIBLE
             }
         }
@@ -81,23 +79,6 @@ class SearchFragment : Fragment(), MovieAdapter.ItemSelected {
 
     }
 
-    private fun searchMovie(title: String) {
-        searchScreenViewModel.searchMovie(title).asyncRequest()
-            .subscribe(object : SingleObserver<Movie_Tv> {
-                override fun onSubscribe(d: Disposable) {
-                    disposable = d
-                }
-
-                override fun onSuccess(t: Movie_Tv) {
-                    showDataInRecycler(t.results)
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-
-            })
-    }
 
     private fun showDataInRecycler(data: List<Movie_Tv.Result>) {
 
@@ -124,8 +105,4 @@ class SearchFragment : Fragment(), MovieAdapter.ItemSelected {
         startActivity(intent)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        disposable.dispose()
-    }
 }

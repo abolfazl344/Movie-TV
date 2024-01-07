@@ -1,16 +1,21 @@
 package ir.abolfazl.abolmovie.Activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.bumptech.glide.Glide
-import ir.abolfazl.abolmovie.apiManager.BASE_URL_IMAGE
-import ir.abolfazl.abolmovie.model.Movie_Tv
+import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.RequestManager
+import dagger.hilt.android.AndroidEntryPoint
+import ir.abolfazl.abolmovie.utils.BASE_URL_IMAGE
 import ir.abolfazl.abolmovie.databinding.ActivityDetailBinding
+import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class DetailActivity : AppCompatActivity() {
     lateinit var binding: ActivityDetailBinding
 
+    @Inject
+    lateinit var glide: RequestManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
@@ -18,14 +23,12 @@ class DetailActivity : AppCompatActivity() {
 
         val dataMovie = intent.getParcelableExtra<Movie_Tv.Result>("SendData")
 
-        Glide
-            .with(this)
+        glide
             .load(BASE_URL_IMAGE + dataMovie!!.posterPath)
             .transform(RoundedCornersTransformation(32, 8))
             .into(binding.imgPoster)
 
-        Glide
-            .with(this)
+        glide
             .load(BASE_URL_IMAGE + dataMovie.backdropPath)
             .into(binding.imgBackImage)
 

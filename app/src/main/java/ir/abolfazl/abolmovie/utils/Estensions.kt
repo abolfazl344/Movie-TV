@@ -18,6 +18,6 @@ fun Context.showToast(text : String) {
 
 fun <T> Single<T>.asyncRequest() : Single<T>{
 
-    return subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    return subscribeOn(Schedulers.io()).observeOn(Schedulers.io())
 
 }
