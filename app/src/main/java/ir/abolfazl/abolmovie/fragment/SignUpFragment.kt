@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentSignUpBinding
@@ -20,6 +22,8 @@ class SignUpFragment : Fragment() {
     private lateinit var binding : FragmentSignUpBinding
     @Inject
     lateinit var fireAuth : FirebaseAuth
+    @Inject
+    lateinit var db : FirebaseFirestore
     private val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"
     private var username = ""
     private var email = ""
@@ -44,7 +48,7 @@ class SignUpFragment : Fragment() {
             password = binding.edtPassword.text.toString()
             confirmPassword = binding.edtConfirmPassword.text.toString()
 
-            if(username.isNotEmpty() && username.length >= 4) {
+            if(username.isNotEmpty() && username.length >= 3) {
                 if (email.isNotEmpty() && isValidEmail(email)) {
                     if (password.isNotEmpty() && password.length >= 4) {
                         if (confirmPassword.isNotEmpty() && confirmPassword == password) {
@@ -72,10 +76,25 @@ class SignUpFragment : Fragment() {
         fireAuth.createUserWithEmailAndPassword(email,password)
             .addOnCompleteListener {
                 if(it.isSuccessful){
+                    addUserToDatabase(email,password,username)
+                }else{
+                    requireActivity().showToast("Sign up not completed")
+                }
+
+            }
+    }
+
+    private fun addUserToDatabase(email: String, password: String, username: String) {
+        val userData = UserInfo(email,password,username)
+        db
+            .collection("users")
+            .document(email)
+            .set(userData)
+            .addOnCompleteListener {
+                if(it.isSuccessful){
                     val action = SignUpFragmentDirections.actionFragmentSignUpToFragmentMain(username)
                     findNavController().navigate(action)
-                }else{
-                    requireActivity().showToast("SignIn failed!")
+                    requireActivity().showToast("data added to database")
                 }
 
             }

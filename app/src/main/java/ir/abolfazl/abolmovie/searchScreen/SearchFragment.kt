@@ -54,6 +54,9 @@ class SearchFragment : Fragment(), MovieAdapter.ItemSelected {
                     findNavController().navigate(R.id.action_searchFragment_to_fragmentMovie)
                 }
 
+                R.id.btn_Profile_menu ->{
+                    //findNavController().navigate(R.id.action_searchFragment_to_userFragment)
+                }
             }
             true
         }

@@ -5,6 +5,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
@@ -72,8 +74,15 @@ object MyModules {
 
     @Provides
     @Singleton
-    fun provideFirebase() : FirebaseAuth {
+    fun provideFirebaseAuth() : FirebaseAuth {
 
         return Firebase.auth
+    }
+
+    @Provides
+    @Singleton
+    fun provideFireStore() : FirebaseFirestore {
+
+        return Firebase.firestore
     }
 }

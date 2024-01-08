@@ -50,11 +50,8 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        mainActivity().binding.bottomNavigation.visibility = View.INVISIBLE
+        mainActivity().binding.bottomNavigation.visibility = View.VISIBLE
 
-        if (fireAuth.currentUser == null) {
-            findNavController().navigate(R.id.action_fragmentMain_to_fragmentIntro2)
-        }
         initUi()
 
         binding.refreshLayoutMain.setOnRefreshListener {
@@ -77,6 +74,10 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
 
                 R.id.btn_search_menu -> {
                     findNavController().navigate(R.id.action_fragmentMain_to_searchFragment)
+                }
+
+                R.id.btn_Profile_menu ->{
+                    findNavController().navigate(R.id.action_fragmentMain_to_userFragment)
                 }
             }
             true
@@ -163,6 +164,12 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
         binding.recyclerNewMovie.recycledViewPool.setMaxRecycledViews(0, 0)
     }
 
+    override fun onStart() {
+        super.onStart()
+        if(fireAuth.currentUser == null){
+            findNavController().navigate(R.id.action_fragmentMain_to_fragmentIntro2)
+        }
+    }
 }
 
 

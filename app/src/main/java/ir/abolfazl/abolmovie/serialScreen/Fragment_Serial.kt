@@ -61,6 +61,10 @@ class FragmentSerial : Fragment(), MovieAdapter.ItemSelected {
                 R.id.btn_TV_menu -> {
                     findNavController().navigate(R.id.action_fragmentSerial_to_searchFragment)
                 }
+
+                R.id.btn_Profile_menu ->{
+                    findNavController().navigate(R.id.action_fragmentSerial_to_userFragment)
+                }
             }
             true
         }
