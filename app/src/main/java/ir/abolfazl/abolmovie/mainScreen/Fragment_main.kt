@@ -11,26 +11,30 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavArgs
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.Activity.DetailActivity
 import ir.abolfazl.abolmovie.movieScreen.MovieAdapter
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentMainBinding
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
-import ir.abolfazl.abolmovie.model.MainRepository
-import ir.abolfazl.abolmovie.model.api.ApiService
-import ir.abolfazl.abolmovie.utils.MainViewModelFactory
 import ir.abolfazl.abolmovie.utils.mainActivity
+import ir.abolfazl.abolmovie.utils.showToast
 import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
     lateinit var binding: FragmentMainBinding
+
+    @Inject
+    lateinit var fireAuth: FirebaseAuth
     private val mainScreenViewModel: MainScreenViewModel by viewModels()
+
     companion object {
         var ItemCount = 10
     }
@@ -46,8 +50,11 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        firstRun()
+        mainActivity().binding.bottomNavigation.visibility = View.INVISIBLE
 
+        if (fireAuth.currentUser == null) {
+            findNavController().navigate(R.id.action_fragmentMain_to_fragmentIntro2)
+        }
         initUi()
 
         binding.refreshLayoutMain.setOnRefreshListener {

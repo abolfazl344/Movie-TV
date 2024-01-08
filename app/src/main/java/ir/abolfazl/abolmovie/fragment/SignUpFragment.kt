@@ -1,5 +1,6 @@
 package ir.abolfazl.abolmovie.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,7 +19,7 @@ import javax.inject.Inject
 class SignUpFragment : Fragment() {
     private lateinit var binding : FragmentSignUpBinding
     @Inject
-    private lateinit var fireAuth : FirebaseAuth
+    lateinit var fireAuth : FirebaseAuth
     private val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"
     private var username = ""
     private var email = ""
@@ -33,6 +34,7 @@ class SignUpFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding.btnSignUp.setOnClickListener {
@@ -70,8 +72,7 @@ class SignUpFragment : Fragment() {
         fireAuth.createUserWithEmailAndPassword(email,password)
             .addOnCompleteListener {
                 if(it.isSuccessful){
-                    val userInfo = UserInfo(username,email,password)
-                    val action = SignUpFragmentDirections.actionFragmentSignUpToFragmentMain(userInfo)
+                    val action = SignUpFragmentDirections.actionFragmentSignUpToFragmentMain(username)
                     findNavController().navigate(action)
                 }else{
                     requireActivity().showToast("SignIn failed!")

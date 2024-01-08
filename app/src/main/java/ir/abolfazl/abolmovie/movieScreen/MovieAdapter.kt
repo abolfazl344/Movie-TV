@@ -1,9 +1,11 @@
 package ir.abolfazl.abolmovie.movieScreen
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.utils.BASE_URL_IMAGE
@@ -12,16 +14,15 @@ import ir.abolfazl.abolmovie.databinding.ItemRecyclerMovieBinding
 import ir.abolfazl.abolmovie.mainScreen.FragmentMain
 import javax.inject.Inject
 
-@AndroidEntryPoint
 class MovieAdapter(private val data: ArrayList<Movie_Tv.Result>, val selectedItem: ItemSelected) : RecyclerView.Adapter<MovieAdapter.MainViewHolder>() {
     lateinit var binding : ItemRecyclerMovieBinding
-    @Inject
-    lateinit var glide : RequestManager
+
     inner class MainViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
 
         fun bindData(movie: Movie_Tv.Result){
 
-            glide
+            Glide
+                .with(itemView.context)
                 .load(BASE_URL_IMAGE + movie.posterPath)
                 .into(binding.imgItemMovie)
 

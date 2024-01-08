@@ -22,7 +22,7 @@
             app:destination="@id/searchFragment" />
         <argument
             android:name="userDetail"
-            app:argType="ir.abolfazl.abolmovie.model.Local.UserInfo" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/fragmentMovie"

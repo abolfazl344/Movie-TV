@@ -28,8 +28,6 @@ class FragmentLogin : Fragment() {
             findNavController().navigate(R.id.fragmentMain)
         }
 
-        val data : Pair<String, String>? = requireArguments().getSerializable("email_password") as? Pair<String, String>
-
         binding.txtSignUp.setOnClickListener {
             findNavController().navigate(R.id.action_fragmentLogin_to_signUpFragment)
         }
