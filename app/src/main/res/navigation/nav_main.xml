@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_fragmentMain_to_userFragment"
             app:destination="@id/userFragment" />
+        <action
+            android:id="@+id/action_fragmentMain_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragmentMovie"
@@ -67,7 +70,7 @@
 
     <fragment
         android:id="@+id/fragmentLogin"
-        android:name="ir.abolfazl.abolmovie.fragment.FragmentLogin"
+        android:name="ir.abolfazl.abolmovie.loginScreen.FragmentLogin"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login">
         <action
@@ -89,7 +92,7 @@
 
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="ir.abolfazl.abolmovie.fragment.SignUpFragment"
+        android:name="ir.abolfazl.abolmovie.signupScreen.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up">
         <action

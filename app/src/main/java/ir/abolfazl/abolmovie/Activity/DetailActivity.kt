@@ -3,6 +3,7 @@ package ir.abolfazl.abolmovie.Activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.utils.BASE_URL_IMAGE
 import ir.abolfazl.abolmovie.databinding.ActivityDetailBinding
@@ -26,6 +27,8 @@ class DetailActivity : AppCompatActivity() {
         glide
             .load(BASE_URL_IMAGE + dataMovie!!.posterPath)
             .transform(RoundedCornersTransformation(32, 8))
+            .skipMemoryCache(true)
+            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
             .into(binding.imgPoster)
 
         glide

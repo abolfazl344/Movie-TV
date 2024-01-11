@@ -86,6 +86,7 @@ class MainScreenViewModel @Inject constructor(private val mainRepository: MainRe
             })
     }
 
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()

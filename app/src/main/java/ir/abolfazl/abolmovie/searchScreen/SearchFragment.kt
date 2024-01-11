@@ -13,19 +13,24 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.Activity.DetailActivity
+import ir.abolfazl.abolmovie.Activity.MainActivity
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentSearchBinding
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import ir.abolfazl.abolmovie.model.api.ApiService
-import ir.abolfazl.abolmovie.movieScreen.MovieAdapter
+import ir.abolfazl.abolmovie.model.MovieAdapter
 import ir.abolfazl.abolmovie.utils.mainActivity
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchFragment : Fragment(), MovieAdapter.ItemSelected {
     lateinit var binding: FragmentSearchBinding
+    private lateinit var searchAdapter: MovieAdapter
+
     @Inject
     lateinit var apiService: ApiService
     private val searchScreenViewModel: SearchScreenViewModel by viewModels()
@@ -47,31 +52,32 @@ class SearchFragment : Fragment(), MovieAdapter.ItemSelected {
                 R.id.btn_Home_menu -> {
                     findNavController().navigate(R.id.action_searchFragment_to_fragmentMain)
                 }
+
                 R.id.btn_TV_menu -> {
                     findNavController().navigate(R.id.action_searchFragment_to_fragmentSerial)
                 }
+
                 R.id.btn_Movie_menu -> {
                     findNavController().navigate(R.id.action_searchFragment_to_fragmentMovie)
                 }
 
-                R.id.btn_Profile_menu ->{
-                    //findNavController().navigate(R.id.action_searchFragment_to_userFragment)
+                R.id.btn_Profile_menu -> {
+                    findNavController().navigate(R.id.action_searchFragment_to_userFragment)
                 }
             }
             true
         }
 
-
         binding.edtSearch.addTextChangedListener { txt ->
-            if(txt.toString().isNotEmpty()){
+            if (txt.toString().isNotEmpty()) {
                 searchScreenViewModel.searchMovie(txt.toString())
-                searchScreenViewModel.searchMovies.observe(viewLifecycleOwner){
-                    showDataInRecycler(it.results)
+                searchScreenViewModel.searchMovies.observe(viewLifecycleOwner) {
+                    setupRecyclerView(binding.recyclerSearch,it.results)
                 }
-                if(!binding.recyclerSearch.isVisible){
+                if (!binding.recyclerSearch.isVisible) {
                     binding.recyclerSearch.visibility = View.VISIBLE
                 }
-            }else if(txt.toString().isEmpty()){
+            } else if (txt.toString().isEmpty()) {
                 binding.recyclerSearch.visibility = View.INVISIBLE
             }
         }
@@ -82,24 +88,16 @@ class SearchFragment : Fragment(), MovieAdapter.ItemSelected {
 
     }
 
-
-    private fun showDataInRecycler(data: List<Movie_Tv.Result>) {
-
-        val adapter: MovieAdapter
-
-        if (data.isNotEmpty()) {
-            binding.txtNoSearchFound.visibility = View.INVISIBLE
-            adapter = MovieAdapter(ArrayList(data), this)
-            binding.recyclerSearch.adapter = adapter
-            binding.recyclerSearch.layoutManager =
+    private fun setupRecyclerView(recyclerView: RecyclerView, data: List<Movie_Tv.Result>) {
+        if (!::searchAdapter.isInitialized) {
+            searchAdapter = MovieAdapter(ArrayList(data), this)
+            recyclerView.adapter = searchAdapter
+            recyclerView.layoutManager =
                 GridLayoutManager(requireContext(), 3, LinearLayoutManager.VERTICAL, false)
-            binding.recyclerSearch.recycledViewPool.setMaxRecycledViews(0, 0)
-
-        }else{
-            binding.txtNoSearchFound.visibility = View.VISIBLE
-            binding.recyclerSearch.visibility = View.INVISIBLE
+            recyclerView.recycledViewPool.setMaxRecycledViews(0, 0)
+        } else {
+            searchAdapter.refreshData(data)
         }
-
     }
 
     override fun itemSelected(movie: Movie_Tv.Result) {

@@ -6,19 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
+import ir.abolfazl.abolmovie.Activity.MainActivity
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentIntroBinding
 import ir.abolfazl.abolmovie.utils.mainActivity
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class FragmentIntro : Fragment() {
     lateinit var binding: FragmentIntroBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,7 +27,6 @@ class FragmentIntro : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mainActivity().binding.bottomNavigation.visibility = View.INVISIBLE
-
         binding.btnGetIn.setOnClickListener {
             findNavController().navigate(R.id.action_fragmentIntro2_to_fragmentLogin)
         }

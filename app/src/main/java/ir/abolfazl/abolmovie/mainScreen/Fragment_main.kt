@@ -11,30 +11,29 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavArgs
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.Activity.DetailActivity
-import ir.abolfazl.abolmovie.movieScreen.MovieAdapter
+import ir.abolfazl.abolmovie.Activity.MainActivity
+import ir.abolfazl.abolmovie.model.MovieAdapter
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentMainBinding
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import ir.abolfazl.abolmovie.utils.mainActivity
-import ir.abolfazl.abolmovie.utils.showToast
-import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
     lateinit var binding: FragmentMainBinding
-
+    private val mainScreenViewModel: MainScreenViewModel by viewModels()
+    private lateinit var mainAdapter: MovieAdapter
     @Inject
     lateinit var fireAuth: FirebaseAuth
-    private val mainScreenViewModel: MainScreenViewModel by viewModels()
-
     companion object {
         var ItemCount = 10
     }
@@ -49,7 +48,7 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        firstRun()
         mainActivity().binding.bottomNavigation.visibility = View.VISIBLE
 
         initUi()
@@ -76,7 +75,7 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
                     findNavController().navigate(R.id.action_fragmentMain_to_searchFragment)
                 }
 
-                R.id.btn_Profile_menu ->{
+                R.id.btn_Profile_menu -> {
                     findNavController().navigate(R.id.action_fragmentMain_to_userFragment)
                 }
             }
@@ -87,13 +86,6 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
             requireActivity().finish()
         }
     }
-
-    private fun initUi() {
-        getNowPlayingMovie()
-        getPopularMovie()
-        getTopMovie()
-    }
-
     private fun firstRun() {
         val prefs = requireActivity().getSharedPreferences(null, AppCompatActivity.MODE_PRIVATE)
         val firstRun = prefs.getBoolean("KEY_FIRST_RUN", true)
@@ -103,19 +95,23 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
             prefs.edit().putBoolean("KEY_FIRST_RUN", false).apply()
         }
     }
+    private fun initUi() {
+        getNowPlayingMovie()
+        getPopularMovie()
+        getTopMovie()
+    }
 
     private fun getPopularMovie() {
         mainScreenViewModel.getPopularMovie()
         mainScreenViewModel.popularMovie.observe(viewLifecycleOwner) {
-            showDataInRecyclerPopularMovie(it.results)
+            setDataToRecycler(binding.recyclerPopularMovie,it.results)
         }
 
     }
-
     private fun getTopMovie() {
         mainScreenViewModel.getTopMovie()
         mainScreenViewModel.topMovie.observe(viewLifecycleOwner) {
-            showDataInRecyclerTopRated(it.results)
+            setDataToRecycler(binding.recyclerToprated,it.results)
         }
 
     }
@@ -123,9 +119,16 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
     private fun getNowPlayingMovie() {
         mainScreenViewModel.getNowPlaying()
         mainScreenViewModel.nowMovie.observe(viewLifecycleOwner) {
-            showDataInRecyclerNowPlaying(it.results)
+            setDataToRecycler(binding.recyclerNowPlaying,it.results)
         }
 
+    }
+    private fun setDataToRecycler(recyclerView: RecyclerView,data: List<Movie_Tv.Result>) {
+        mainAdapter = MovieAdapter(ArrayList(data), this)
+        recyclerView.adapter = mainAdapter
+        recyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.recycledViewPool.setMaxRecycledViews(0, 0)
     }
 
     override fun itemSelected(movie: Movie_Tv.Result) {
@@ -137,37 +140,10 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
         startActivity(intent)
     }
 
-    private fun showDataInRecyclerNowPlaying(data: List<Movie_Tv.Result>) {
-
-        val mainAdapter = MovieAdapter(ArrayList(data), this)
-        binding.recyclerNowPlaying.adapter = mainAdapter
-        binding.recyclerNowPlaying.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.recyclerNowPlaying.recycledViewPool.setMaxRecycledViews(0, 0)
-
-    }
-
-    private fun showDataInRecyclerTopRated(data: List<Movie_Tv.Result>) {
-        val mainAdapter = MovieAdapter(ArrayList(data), this)
-        binding.recyclerToprated.adapter = mainAdapter
-        binding.recyclerToprated.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.recyclerToprated.recycledViewPool.setMaxRecycledViews(0, 0)
-    }
-
-    private fun showDataInRecyclerPopularMovie(data: List<Movie_Tv.Result>) {
-
-        val mainAdapter = MovieAdapter(ArrayList(data), this)
-        binding.recyclerNewMovie.adapter = mainAdapter
-        binding.recyclerNewMovie.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.recyclerNewMovie.recycledViewPool.setMaxRecycledViews(0, 0)
-    }
-
     override fun onStart() {
         super.onStart()
-        if(fireAuth.currentUser == null){
-            findNavController().navigate(R.id.action_fragmentMain_to_fragmentIntro2)
+        if (fireAuth.currentUser == null) {
+            findNavController().navigate(R.id.action_fragmentMain_to_signUpFragment)
         }
     }
 }

@@ -13,18 +13,23 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.Activity.DetailActivity
+import ir.abolfazl.abolmovie.Activity.MainActivity
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentSerialBinding
 import ir.abolfazl.abolmovie.mainScreen.FragmentMain
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
-import ir.abolfazl.abolmovie.movieScreen.MovieAdapter
+import ir.abolfazl.abolmovie.model.MovieAdapter
 import ir.abolfazl.abolmovie.utils.mainActivity
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FragmentSerial : Fragment(), MovieAdapter.ItemSelected {
     lateinit var binding: FragmentSerialBinding
+    private lateinit var serialAdapter: MovieAdapter
     private val serialScreenViewModel: SerialScreenViewModel by viewModels()
 
     override fun onCreateView(
@@ -58,12 +63,12 @@ class FragmentSerial : Fragment(), MovieAdapter.ItemSelected {
                 R.id.btn_Movie_menu -> {
                     findNavController().navigate(R.id.action_fragmentSerial_to_fragmentMovie)
                 }
-                R.id.btn_TV_menu -> {
-                    findNavController().navigate(R.id.action_fragmentSerial_to_searchFragment)
+                R.id.btn_Profile_menu -> {
+                    findNavController().navigate(R.id.action_fragmentSerial_to_userFragment)
                 }
 
-                R.id.btn_Profile_menu ->{
-                    findNavController().navigate(R.id.action_fragmentSerial_to_userFragment)
+                R.id.btn_search_menu ->{
+                    findNavController().navigate(R.id.action_fragmentSerial_to_searchFragment)
                 }
             }
             true
@@ -77,17 +82,19 @@ class FragmentSerial : Fragment(), MovieAdapter.ItemSelected {
     private fun discoverTv() {
         serialScreenViewModel.discoverTv()
         serialScreenViewModel.discoverSerial.observe(viewLifecycleOwner){
-            showDataInRecycler(it.results)
+            setupRecyclerView(binding.recyclerShowSerial,it.results)
         }
     }
 
-    private fun showDataInRecycler(data: List<Movie_Tv.Result>) {
-
-        val tvAdapter = MovieAdapter(ArrayList(data), this)
-        binding.recyclerShowSerial.adapter = tvAdapter
-        binding.recyclerShowSerial.layoutManager =
-            GridLayoutManager(requireContext(), 3, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerShowSerial.recycledViewPool.setMaxRecycledViews(0, 0)
+    private fun setupRecyclerView(recyclerView: RecyclerView, data: List<Movie_Tv.Result>) {
+        if (!::serialAdapter.isInitialized) {
+            serialAdapter = MovieAdapter(ArrayList(data), this)
+            recyclerView.adapter = serialAdapter
+            recyclerView.layoutManager =
+                GridLayoutManager(requireContext(), 3, LinearLayoutManager.VERTICAL, false)
+            recyclerView.recycledViewPool.setMaxRecycledViews(0, 0)
+        } else
+            serialAdapter.refreshData(data)
     }
 
     override fun itemSelected(movie: Movie_Tv.Result) {

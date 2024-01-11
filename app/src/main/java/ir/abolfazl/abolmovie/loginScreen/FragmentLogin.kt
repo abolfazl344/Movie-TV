@@ -1,32 +1,25 @@
-package ir.abolfazl.abolmovie.fragment
+package ir.abolfazl.abolmovie.loginScreen
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.InputType
-import android.util.Log
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
+import ir.abolfazl.abolmovie.Activity.MainActivity
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentLoginBinding
 import ir.abolfazl.abolmovie.utils.mainActivity
-import ir.abolfazl.abolmovie.utils.showToast
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class FragmentLogin : Fragment() {
     lateinit var binding: FragmentLoginBinding
-
-    @Inject
-    lateinit var fireAuth: FirebaseAuth
-
-    @Inject
-    lateinit var db: FirebaseFirestore
+    private val loginScreenViewModel: LoginScreenViewModel by viewModels()
     private var email = ""
     private var password = ""
     override fun onCreateView(
@@ -42,15 +35,10 @@ class FragmentLogin : Fragment() {
         mainActivity().binding.bottomNavigation.visibility = View.INVISIBLE
 
         binding.btnLogin.setOnClickListener {
+            binding.layoutSignIn.visibility = View.VISIBLE
             email = binding.edtEmailLogIn.text.toString()
             password = binding.edtPasswordLogIn.text.toString()
-
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                loginUser(email, password)
-            } else {
-                binding.txtError.visibility = View.VISIBLE
-                binding.txtError.text = "Enter Email and Password"
-            }
+            loginUser(email, password)
         }
 
         binding.txtSignUp.setOnClickListener {
@@ -60,20 +48,28 @@ class FragmentLogin : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun loginUser(email: String, password: String) {
-
-        fireAuth
-            .signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { it ->
-                if (it.isSuccessful) {
-
-                } else {
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            loginScreenViewModel.loginUser(email, password)
+            if (loginScreenViewModel.loginState) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    binding.layoutSignIn.visibility = View.INVISIBLE
+                    val action = FragmentLoginDirections.actionFragmentLoginToFragmentMain(
+                        loginScreenViewModel.user
+                    )
+                    findNavController().navigate(action)
+                }, 1500)
+            } else {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    binding.layoutSignIn.visibility = View.INVISIBLE
                     binding.txtError.visibility = View.VISIBLE
                     binding.txtError.text = "Email or Password is incorrect"
-                }
+                }, 1500)
             }
-            .addOnCanceledListener {
 
-            }
+        } else {
+            binding.layoutSignIn.visibility = View.INVISIBLE
+            binding.txtError.visibility = View.VISIBLE
+            binding.txtError.text = "Enter Email and Password"
+        }
     }
-
 }

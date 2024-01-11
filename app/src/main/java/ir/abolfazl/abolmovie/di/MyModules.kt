@@ -3,6 +3,7 @@ package ir.abolfazl.abolmovie.di
 import android.content.Context
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -13,6 +14,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import ir.abolfazl.abolmovie.Activity.MainActivity
 import ir.abolfazl.abolmovie.utils.BASE_URL
 import ir.abolfazl.abolmovie.model.MainRepository
 import ir.abolfazl.abolmovie.model.api.ApiService
@@ -30,7 +32,8 @@ object MyModules {
     @Singleton
     fun provideGlide(@ApplicationContext context:Context) : RequestManager{
 
-        return Glide.with(context)
+        return Glide
+            .with(context)
     }
 
     @Provides
@@ -85,4 +88,5 @@ object MyModules {
 
         return Firebase.firestore
     }
+
 }

@@ -13,17 +13,23 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.Activity.DetailActivity
+import ir.abolfazl.abolmovie.Activity.MainActivity
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import ir.abolfazl.abolmovie.databinding.FragmentMovieBinding
 import ir.abolfazl.abolmovie.mainScreen.FragmentMain
+import ir.abolfazl.abolmovie.model.MovieAdapter
 import ir.abolfazl.abolmovie.utils.mainActivity
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
     private lateinit var binding: FragmentMovieBinding
+    private lateinit var movieAdapter: MovieAdapter
     private val movieScreenViewModel: MovieScreenViewModel by viewModels()
 
     override fun onCreateView(
@@ -78,17 +84,20 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
     private fun discoverMovie() {
         movieScreenViewModel.discoverMovie()
         movieScreenViewModel.discoverMovie.observe(viewLifecycleOwner){
-            showDataInRecycler(it.results)
+            setupRecyclerView(binding.recyclerShowMovie,it.results)
         }
     }
 
-    private fun showDataInRecycler(data: List<Movie_Tv.Result>) {
-
-        val movieAdapter = MovieAdapter(ArrayList(data), this)
-        binding.recyclerShowMovie.adapter = movieAdapter
-        binding.recyclerShowMovie.layoutManager =
-            GridLayoutManager(requireContext(), 3, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerShowMovie.recycledViewPool.setMaxRecycledViews(0, 0)
+    private fun setupRecyclerView(recyclerView: RecyclerView, data: List<Movie_Tv.Result>) {
+        if (!::movieAdapter.isInitialized) {
+            movieAdapter = MovieAdapter(ArrayList(data), this)
+            recyclerView.adapter = movieAdapter
+            recyclerView.layoutManager =
+                GridLayoutManager(requireContext(), 3, LinearLayoutManager.VERTICAL, false)
+            recyclerView.recycledViewPool.setMaxRecycledViews(0, 0)
+        } else {
+            movieAdapter.refreshData(data)
+        }
     }
 
     override fun itemSelected(movie: Movie_Tv.Result) {
