@@ -6,15 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import dagger.hilt.android.AndroidEntryPoint
-import ir.abolfazl.abolmovie.Activity.MainActivity
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentIntroBinding
-import ir.abolfazl.abolmovie.utils.mainActivity
-import javax.inject.Inject
+import ir.abolfazl.abolmovie.utils.Extensions.mainActivity
 
-@AndroidEntryPoint
 class FragmentIntro : Fragment() {
     lateinit var binding: FragmentIntroBinding
     override fun onCreateView(

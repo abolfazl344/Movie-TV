@@ -13,8 +13,8 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentSignUpBinding
-import ir.abolfazl.abolmovie.utils.mainActivity
-import ir.abolfazl.abolmovie.utils.showToast
+import ir.abolfazl.abolmovie.utils.Extensions.mainActivity
+import ir.abolfazl.abolmovie.utils.Extensions.showToast
 
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {
@@ -39,7 +39,6 @@ class SignUpFragment : Fragment() {
         mainActivity().binding.bottomNavigation.visibility = View.INVISIBLE
 
         binding.btnSignUp.setOnClickListener {
-            binding.layoutSignIn.visibility = View.VISIBLE
             username = binding.edtUsername.text.toString()
             email = binding.edtEmail.text.toString()
             email.trim()
@@ -51,6 +50,7 @@ class SignUpFragment : Fragment() {
                     if (password.isNotEmpty() && password.length >= 4) {
                         if (confirmPassword.isNotEmpty() && confirmPassword == password) {
                             signUpScreenViewModel.signUpUser(email, password, username)
+                            binding.layoutSignIn.visibility = View.VISIBLE
                             if (signUpScreenViewModel.signupState) {
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     binding.layoutSignIn.visibility = View.INVISIBLE
@@ -58,7 +58,10 @@ class SignUpFragment : Fragment() {
                                     findNavController().navigate(action)
                                 }, 1500)
                             } else {
-                                requireActivity().showToast("Signup not complete!")
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    binding.layoutSignIn.visibility = View.INVISIBLE
+                                    requireActivity().showToast("Signup not complete!")
+                                },1500)
                             }
                         } else {
                             binding.txtError.text = "ConfirmPassword not equal to password"

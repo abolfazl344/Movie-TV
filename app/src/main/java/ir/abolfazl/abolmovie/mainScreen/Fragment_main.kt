@@ -14,16 +14,14 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.Activity.DetailActivity
-import ir.abolfazl.abolmovie.Activity.MainActivity
 import ir.abolfazl.abolmovie.model.MovieAdapter
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentMainBinding
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
-import ir.abolfazl.abolmovie.utils.mainActivity
+import ir.abolfazl.abolmovie.utils.Extensions.mainActivity
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
@@ -34,9 +32,6 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
     private lateinit var mainAdapter: MovieAdapter
     @Inject
     lateinit var fireAuth: FirebaseAuth
-    companion object {
-        var ItemCount = 10
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,7 +45,6 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         firstRun()
         mainActivity().binding.bottomNavigation.visibility = View.VISIBLE
-
         initUi()
 
         binding.refreshLayoutMain.setOnRefreshListener {

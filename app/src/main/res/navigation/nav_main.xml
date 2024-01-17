@@ -23,8 +23,8 @@
 
         <argument
             android:name="username"
-            android:defaultValue="user"
-            app:argType="string" />
+            app:argType="string"
+            android:defaultValue="$" />
         <action
             android:id="@+id/action_fragmentMain_to_userFragment"
             app:destination="@id/userFragment" />
@@ -122,7 +122,7 @@
     </fragment>
     <fragment
         android:id="@+id/userFragment"
-        android:name="ir.abolfazl.abolmovie.fragment.UserFragment"
+        android:name="ir.abolfazl.abolmovie.userScreen.UserFragment"
         android:label="fragment_user"
         tools:layout="@layout/fragment_user">
         <action

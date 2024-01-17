@@ -14,22 +14,25 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.SingleObserver
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import ir.abolfazl.abolmovie.Activity.DetailActivity
-import ir.abolfazl.abolmovie.Activity.MainActivity
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import ir.abolfazl.abolmovie.databinding.FragmentMovieBinding
-import ir.abolfazl.abolmovie.mainScreen.FragmentMain
 import ir.abolfazl.abolmovie.model.MovieAdapter
-import ir.abolfazl.abolmovie.utils.mainActivity
-import javax.inject.Inject
+import ir.abolfazl.abolmovie.utils.Extensions.asyncRequest
+import ir.abolfazl.abolmovie.utils.Extensions.mainActivity
+import ir.abolfazl.abolmovie.utils.Extensions.showToast
 
 @AndroidEntryPoint
 class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
     private lateinit var binding: FragmentMovieBinding
     private lateinit var movieAdapter: MovieAdapter
+    private lateinit var compositeDisposable: CompositeDisposable
+    private var page = 2
     private val movieScreenViewModel: MovieScreenViewModel by viewModels()
 
     override fun onCreateView(
@@ -42,12 +45,12 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        FragmentMain.ItemCount = 20
-
-        discoverMovie()
+        compositeDisposable = CompositeDisposable()
+        discoverMovie(1)
 
         binding.swipeMovie.setOnRefreshListener {
-            discoverMovie()
+            movieAdapter.clearData()
+            discoverMovie(1)
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.swipeMovie.isRefreshing = false
             }, 1500)
@@ -69,7 +72,7 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
                     findNavController().navigate(R.id.action_fragmentMovie_to_searchFragment)
                 }
 
-                R.id.btn_Profile_menu ->{
+                R.id.btn_Profile_menu -> {
                     findNavController().navigate(R.id.action_fragmentMovie_to_userFragment)
                 }
             }
@@ -81,23 +84,56 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
         }
     }
 
-    private fun discoverMovie() {
-        movieScreenViewModel.discoverMovie()
-        movieScreenViewModel.discoverMovie.observe(viewLifecycleOwner){
-            setupRecyclerView(binding.recyclerShowMovie,it.results)
+    private fun discoverMovie(page: Int) {
+        movieScreenViewModel
+            .discoverMovie(page)
+            .asyncRequest()
+            .subscribe(object : SingleObserver<Movie_Tv> {
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
+
+                override fun onError(e: Throwable) {
+                    requireActivity().showToast("check network")
+                }
+
+                override fun onSuccess(t: Movie_Tv) {
+                    setupRecyclerView(t.results)
+                }
+
+            })
+    }
+
+    private fun setupRecyclerView(data: List<Movie_Tv.Result>) {
+        if (!::movieAdapter.isInitialized) {
+            movieAdapter = MovieAdapter(ArrayList(data), this)
+            binding.recyclerShowMovie.adapter = movieAdapter
+            val layoutManager =
+                GridLayoutManager(requireContext(), 3, LinearLayoutManager.VERTICAL, false)
+            binding.recyclerShowMovie.layoutManager = layoutManager
+            scrollRecycler(layoutManager)
+            binding.recyclerShowMovie.recycledViewPool.setMaxRecycledViews(0, 0)
+        } else {
+            movieAdapter.addData(data)
         }
     }
 
-    private fun setupRecyclerView(recyclerView: RecyclerView, data: List<Movie_Tv.Result>) {
-        if (!::movieAdapter.isInitialized) {
-            movieAdapter = MovieAdapter(ArrayList(data), this)
-            recyclerView.adapter = movieAdapter
-            recyclerView.layoutManager =
-                GridLayoutManager(requireContext(), 3, LinearLayoutManager.VERTICAL, false)
-            recyclerView.recycledViewPool.setMaxRecycledViews(0, 0)
-        } else {
-            movieAdapter.refreshData(data)
-        }
+    private fun scrollRecycler(layoutManager: GridLayoutManager) {
+
+        binding.recyclerShowMovie.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+                if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= 20) {
+                    discoverMovie(page)
+                    page++
+                }
+            }
+
+        })
+
     }
 
     override fun itemSelected(movie: Movie_Tv.Result) {
@@ -109,4 +145,8 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
         startActivity(intent)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
+    }
 }

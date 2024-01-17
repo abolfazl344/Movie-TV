@@ -14,25 +14,18 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.Activity.DetailActivity
-import ir.abolfazl.abolmovie.Activity.MainActivity
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentSearchBinding
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
-import ir.abolfazl.abolmovie.model.api.ApiService
 import ir.abolfazl.abolmovie.model.MovieAdapter
-import ir.abolfazl.abolmovie.utils.mainActivity
-import javax.inject.Inject
+import ir.abolfazl.abolmovie.utils.Extensions.mainActivity
 
 @AndroidEntryPoint
 class SearchFragment : Fragment(), MovieAdapter.ItemSelected {
     lateinit var binding: FragmentSearchBinding
     private lateinit var searchAdapter: MovieAdapter
-
-    @Inject
-    lateinit var apiService: ApiService
     private val searchScreenViewModel: SearchScreenViewModel by viewModels()
 
     override fun onCreateView(

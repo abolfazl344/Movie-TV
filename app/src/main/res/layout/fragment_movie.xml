@@ -8,7 +8,6 @@
     android:padding="8dp">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:layout_marginBottom="60dp"
         android:id="@+id/swipe_Movie"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

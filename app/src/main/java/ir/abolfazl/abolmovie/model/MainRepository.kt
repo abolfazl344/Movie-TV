@@ -20,14 +20,14 @@ class MainRepository @Inject constructor(private val apiService: ApiService) {
         return apiService.getNowPlayingMovie()
     }
 
-    fun discoverMovie() : Single<Movie_Tv>{
+    fun discoverMovie(page : Int) : Single<Movie_Tv>{
 
-        return apiService.discoverMovie()
+        return apiService.discoverMovie(page)
     }
 
-    fun discoverSerial() : Single<Movie_Tv>{
+    fun discoverSerial(page: Int) : Single<Movie_Tv>{
 
-        return apiService.discoverSerial()
+        return apiService.discoverSerial(page)
     }
 
     fun searchMovie(title : String) : Single<Movie_Tv>{

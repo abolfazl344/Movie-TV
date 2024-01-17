@@ -5,7 +5,7 @@
     <item
         android:id="@+id/btn_search_menu"
         android:icon="@drawable/search"
-        android:title="Search" />
+        android:title="Explore" />
 
     <item
         android:id="@+id/btn_Movie_menu"

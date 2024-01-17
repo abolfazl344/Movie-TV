@@ -11,10 +11,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import ir.abolfazl.abolmovie.Activity.MainActivity
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentLoginBinding
-import ir.abolfazl.abolmovie.utils.mainActivity
+import ir.abolfazl.abolmovie.utils.Extensions.mainActivity
 
 @AndroidEntryPoint
 class FragmentLogin : Fragment() {
@@ -35,7 +34,6 @@ class FragmentLogin : Fragment() {
         mainActivity().binding.bottomNavigation.visibility = View.INVISIBLE
 
         binding.btnLogin.setOnClickListener {
-            binding.layoutSignIn.visibility = View.VISIBLE
             email = binding.edtEmailLogIn.text.toString()
             password = binding.edtPasswordLogIn.text.toString()
             loginUser(email, password)
@@ -50,6 +48,7 @@ class FragmentLogin : Fragment() {
     private fun loginUser(email: String, password: String) {
         if (email.isNotEmpty() && password.isNotEmpty()) {
             loginScreenViewModel.loginUser(email, password)
+            binding.layoutSignIn.visibility = View.VISIBLE
             if (loginScreenViewModel.loginState) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     binding.layoutSignIn.visibility = View.INVISIBLE

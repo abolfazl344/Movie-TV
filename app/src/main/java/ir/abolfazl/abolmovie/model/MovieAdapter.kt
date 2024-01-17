@@ -11,7 +11,6 @@ import com.bumptech.glide.request.RequestOptions
 import ir.abolfazl.abolmovie.utils.BASE_URL_IMAGE
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import ir.abolfazl.abolmovie.databinding.ItemRecyclerMovieBinding
-import ir.abolfazl.abolmovie.mainScreen.FragmentMain
 
 class MovieAdapter(private val data: ArrayList<Movie_Tv.Result>, val selectedItem: ItemSelected) :
     RecyclerView.Adapter<MovieAdapter.MainViewHolder>() {
@@ -49,16 +48,25 @@ class MovieAdapter(private val data: ArrayList<Movie_Tv.Result>, val selectedIte
     }
 
     override fun getItemCount(): Int {
-        return FragmentMain.ItemCount
+        return data.size
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun refreshData(newData: List<Movie_Tv.Result>) {
+    fun addData(newData: List<Movie_Tv.Result>) {
+        val startPosition = data.size
+        data.addAll(newData)
+        notifyItemRangeInserted(startPosition,newData.size)
+    }
+
+    fun refreshData(newData: List<Movie_Tv.Result>){
         data.clear()
         data.addAll(newData)
         notifyDataSetChanged()
     }
-
+    fun clearData(){
+        data.clear()
+        notifyDataSetChanged()
+    }
     interface ItemSelected {
 
         fun itemSelected(movie: Movie_Tv.Result)

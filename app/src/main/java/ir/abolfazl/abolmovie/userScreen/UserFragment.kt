@@ -1,4 +1,4 @@
-package ir.abolfazl.abolmovie.fragment
+package ir.abolfazl.abolmovie.userScreen
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,14 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
-import ir.abolfazl.abolmovie.Activity.MainActivity
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentUserBinding
-import ir.abolfazl.abolmovie.utils.mainActivity
-import ir.abolfazl.abolmovie.utils.showToast
+import ir.abolfazl.abolmovie.utils.Extensions.mainActivity
+import ir.abolfazl.abolmovie.utils.Extensions.showToast
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -30,6 +28,9 @@ class UserFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        val username = fireAuth.currentUser?.displayName
+        val email = fireAuth.currentUser?.email
 
         mainActivity().binding.bottomNavigation.setOnItemSelectedListener {
 
@@ -50,6 +51,13 @@ class UserFragment : Fragment() {
             }
             true
         }
+
+        if(email!!.isNotEmpty() && username!!.isNotEmpty()){
+            binding.txtEmail.text = email
+            binding.txtUsername.text = username
+        }else
+            requireActivity().showToast("error")
+
         binding.btnLogout.setOnClickListener {
             fireAuth.signOut()
             findNavController().navigate(R.id.action_userFragment_to_fragmentLogin)
