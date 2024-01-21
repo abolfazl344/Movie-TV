@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".Activity.DetailActivity">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/main_background"
@@ -20,7 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout_image"
@@ -65,16 +65,6 @@
                     app:layout_constraintStart_toStartOf="@+id/img_poster"
                     app:layout_constraintTop_toBottomOf="@+id/img_poster" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
                 <ImageView
                     android:id="@+id/img_backToHome"
                     android:layout_width="32dp"
@@ -87,7 +77,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/white" />
-
 
                 <com.varunest.sparkbutton.SparkButton
                     android:layout_width="48dp"
@@ -104,70 +93,61 @@
                     app:sparkbutton_secondaryColor="@color/red"
                     tools:ignore="SpeakableTextPresentCheck" />
 
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraint"
+            <LinearLayout
+                android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
                 android:background="@drawable/shape_bg_shadow"
+                android:orientation="horizontal"
+                android:padding="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout_image">
 
-                <LinearLayout
-                    android:id="@+id/linearLayout2"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/txt_score"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginEnd="32dp"
-                    android:orientation="horizontal"
-                    android:padding="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    android:layout_weight="1"
+                    android:drawablePadding="8dp"
+                    android:gravity="center_vertical"
+                    android:maxLength="3"
+                    android:text="1"
+                    android:textColor="@color/white"
+                    app:drawableStartCompat="@drawable/ic_round_star_24"
+                    app:drawableTint="@color/white" />
 
-                    <TextView
-                        android:maxLength="3"
-                        android:id="@+id/txt_score"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:drawablePadding="8dp"
-                        android:gravity="center_vertical"
-                        android:text="1"
-                        android:textColor="@color/white"
-                        app:drawableTint="@color/white"
-                        app:drawableStartCompat="@drawable/ic_round_star_24" />
+                <TextView
+                    android:id="@+id/txt_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="8dp"
+                    android:gravity="center_vertical"
+                    android:text="1"
+                    android:textColor="@color/white"
+                    app:drawableStartCompat="@drawable/ic_language_planet_icon"
+                    app:drawableTint="@color/white" />
 
-                    <TextView
-                        android:id="@+id/txt_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:drawablePadding="8dp"
-                        android:gravity="center_vertical"
-                        android:text="1"
-                        android:textColor="@color/white"
-                        app:drawableStartCompat="@drawable/ic_language_planet_icon"
-                        app:drawableTint="@color/white" />
+                <TextView
+                    android:id="@+id/txt_release"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="8dp"
+                    android:gravity="center_vertical"
+                    android:text="1"
+                    android:textColor="@color/white"
+                    app:drawableStartCompat="@drawable/ic_round_calendar_today_24"
+                    app:drawableTint="@color/white" />
 
-                    <TextView
-                        android:id="@+id/txt_release"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="8dp"
-                        android:gravity="center_vertical"
-                        android:text="1"
-                        android:textColor="@color/white"
-                        app:drawableStartCompat="@drawable/ic_round_calendar_today_24"
-                        app:drawableTint="@color/white" />
-
-                </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
             <TextView
+                android:textStyle="bold"
                 android:id="@+id/txtMovieSummary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -176,11 +156,11 @@
                 android:text="Summary"
                 android:textColor="@color/white"
                 android:textSize="18sp"
+                app:drawableStartCompat="@drawable/ic_round_info_24"
+                app:drawableTint="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraint"
-                app:drawableStartCompat="@drawable/ic_round_info_24"
-                app:drawableTint="@color/white" />
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
             <TextView
                 android:id="@+id/txtInfoMovie"
@@ -195,9 +175,34 @@
                 app:layout_constraintStart_toStartOf="@+id/txtMovieSummary"
                 app:layout_constraintTop_toBottomOf="@+id/txtMovieSummary" />
 
+            <TextView
+                android:textStyle="bold"
+                android:id="@+id/txt_trailer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="24dp"
+                android:drawablePadding="8dp"
+                android:text="Trailer"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:drawableStartCompat="@drawable/trailers"
+                app:drawableTint="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtInfoMovie" />
 
+            <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                android:id="@+id/playerDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:handleNetworkEvents="true"
+                app:enableAutomaticInitialization="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_trailer" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

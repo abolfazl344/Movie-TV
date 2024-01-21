@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.core.os.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -46,6 +47,7 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         compositeDisposable = CompositeDisposable()
+
         discoverMovie(1)
 
         binding.swipeMovie.setOnRefreshListener {
@@ -94,11 +96,15 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
                 }
 
                 override fun onError(e: Throwable) {
+
                     requireActivity().showToast("check network")
                 }
 
                 override fun onSuccess(t: Movie_Tv) {
-                    setupRecyclerView(t.results)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        setupRecyclerView(t.results)
+                    },1500)
+
                 }
 
             })
@@ -127,8 +133,10 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
                 val totalItemCount = layoutManager.itemCount
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
                 if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= 20) {
-                    discoverMovie(page)
-                    page++
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        discoverMovie(page)
+                        page++
+                    }, 1500)
                 }
             }
 
