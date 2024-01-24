@@ -2,24 +2,34 @@ package ir.abolfazl.abolmovie.model
 
 import io.reactivex.Single
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
+import ir.abolfazl.abolmovie.model.Local.Trailer
 import ir.abolfazl.abolmovie.model.api.ApiService
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(private val apiService: ApiService) {
 
-    fun getPopularMovie() : Single<Movie_Tv>{
+    fun getPopularMovie(page: Int) : Single<Movie_Tv>{
 
-        return apiService.getPopularMovie()
+        return apiService.getPopularMovie(page)
     }
-    fun getTopMovie() : Single<Movie_Tv>{
+    fun getTopMovie(page: Int) : Single<Movie_Tv>{
 
-        return apiService.getTopMovie()
+        return apiService.getTopMovie(page)
     }
-    fun getNowPlaying() : Single<Movie_Tv>{
+    fun getNowPlaying(page: Int) : Single<Movie_Tv>{
 
-        return apiService.getNowPlayingMovie()
+        return apiService.getNowPlayingMovie(page)
     }
 
+    fun getTopRatedTv(page: Int) : Single<Movie_Tv>{
+
+        return apiService.getTopRatedTv(page)
+    }
+
+    fun getPopularTv(page: Int) : Single<Movie_Tv>{
+
+        return apiService.getPopularTv(page)
+    }
     fun discoverMovie(page : Int) : Single<Movie_Tv>{
 
         return apiService.discoverMovie(page)
@@ -30,9 +40,18 @@ class MainRepository @Inject constructor(private val apiService: ApiService) {
         return apiService.discoverSerial(page)
     }
 
+    fun getMovieTrailer(movieID : Int) : Single<Trailer>{
+
+        return apiService.getMovieTrailer(movieID)
+    }
+
+    fun getTvTrailer(serialID : Int) : Single<Trailer>{
+
+        return apiService.getTvTrailer(serialID)
+    }
+
     fun searchMovie(title : String) : Single<Movie_Tv>{
 
         return apiService.searchMovie(title)
     }
-
 }

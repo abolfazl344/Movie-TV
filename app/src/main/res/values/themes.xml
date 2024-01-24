@@ -11,4 +11,5 @@
     <style name="Floating" parent="ShapeAppearanceOverlay.Material3.FloatingActionButton">
         <item name="android:foreground">@drawable/floating_background</item>
     </style>
+
 </resources>

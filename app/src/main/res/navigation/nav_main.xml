@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
-    app:startDestination="@id/fragmentMain">
+    app:startDestination="@id/splashFragment">
     <fragment
         android:id="@+id/fragmentMain"
         android:name="ir.abolfazl.abolmovie.mainScreen.FragmentMain"
@@ -15,9 +15,6 @@
             android:id="@+id/action_fragmentMain_to_fragmentSerial"
             app:destination="@id/fragmentSerial" />
         <action
-            android:id="@+id/action_fragmentMain_to_fragmentIntro2"
-            app:destination="@id/fragmentIntro2" />
-        <action
             android:id="@+id/action_fragmentMain_to_searchFragment"
             app:destination="@id/searchFragment" />
 
@@ -28,9 +25,6 @@
         <action
             android:id="@+id/action_fragmentMain_to_userFragment"
             app:destination="@id/userFragment" />
-        <action
-            android:id="@+id/action_fragmentMain_to_signUpFragment"
-            app:destination="@id/signUpFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragmentMovie"
@@ -81,7 +75,7 @@
             app:destination="@id/signUpFragment" />
     </fragment>
     <fragment
-        android:id="@+id/fragmentIntro2"
+        android:id="@+id/fragmentIntro"
         android:name="ir.abolfazl.abolmovie.fragment.FragmentIntro"
         android:label="fragment_intro"
         tools:layout="@layout/fragment_intro">
@@ -140,5 +134,20 @@
         <action
             android:id="@+id/action_userFragment_to_fragmentSerial"
             app:destination="@id/fragmentSerial" />
+    </fragment>
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="ir.abolfazl.abolmovie.fragment.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_signUpFragment2"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_fragmentIntro"
+            app:destination="@id/fragmentIntro" />
+        <action
+            android:id="@+id/action_splashFragment_to_fragmentMain3"
+            app:destination="@id/fragmentMain" />
     </fragment>
 </navigation>

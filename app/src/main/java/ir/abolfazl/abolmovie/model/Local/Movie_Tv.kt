@@ -18,16 +18,18 @@ data class Movie_Tv(
 ) : Parcelable {
     @Parcelize
     data class Result(
+        @SerializedName("id")
+        val id: Int,
         @SerializedName("backdrop_path")
         val backdropPath: String? = null,
         @SerializedName("original_language")
-        val originalLanguage: String,
+        val originalLanguage: String?,
         @SerializedName("overview")
-        val overview: String,
+        val overview: String?,
         @SerializedName("popularity")
-        val popularity: Double,
+        val popularity: Double?,
         @SerializedName("poster_path")
-        val posterPath: String,
+        val posterPath: String?,
         @SerializedName("release_date")
         val releaseDate: String? = null,
         @SerializedName("first_air_date")
@@ -37,6 +39,6 @@ data class Movie_Tv(
         @SerializedName("name")
         val name: String? = null,
         @SerializedName("vote_average")
-        val voteAverage: Double,
+        val voteAverage: Double?,
     ) : Parcelable
 }

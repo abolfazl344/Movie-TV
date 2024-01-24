@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -30,6 +29,7 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
     lateinit var binding: FragmentMainBinding
     private val mainScreenViewModel: MainScreenViewModel by viewModels()
     private lateinit var mainAdapter: MovieAdapter
+
     @Inject
     lateinit var fireAuth: FirebaseAuth
 
@@ -43,12 +43,11 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        firstRun()
         mainActivity().binding.bottomNavigation.visibility = View.VISIBLE
+        fetchData()
         initUi()
-
         binding.refreshLayoutMain.setOnRefreshListener {
-            initUi()
+            fetchData()
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.refreshLayoutMain.isRefreshing = false
             }, 1500)
@@ -80,44 +79,60 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
             requireActivity().finish()
         }
     }
-    private fun firstRun() {
-        val prefs = requireActivity().getSharedPreferences(null, AppCompatActivity.MODE_PRIVATE)
-        val firstRun = prefs.getBoolean("KEY_FIRST_RUN", true)
 
-        if (firstRun) {
-            findNavController().navigate(R.id.action_fragmentMain_to_fragmentIntro2)
-            prefs.edit().putBoolean("KEY_FIRST_RUN", false).apply()
-        }
-    }
     private fun initUi() {
-        getNowPlayingMovie()
+        getNowPlayingMovie(1)
         getPopularMovie()
-        getTopMovie()
+        getTopMovie(1)
+        getTopTv(1)
+        getPopularTv(1)
     }
-
+    private fun fetchData() {
+        mainScreenViewModel.getPopularMovie(1)
+        mainScreenViewModel.getTopMovie(1)
+        mainScreenViewModel.getNowPlaying(1)
+        mainScreenViewModel.getTopTv(1)
+        mainScreenViewModel.getPopularTv(1)
+    }
     private fun getPopularMovie() {
-        mainScreenViewModel.getPopularMovie()
+        //mainScreenViewModel.getPopularMovie(page)
         mainScreenViewModel.popularMovie.observe(viewLifecycleOwner) {
-            setDataToRecycler(binding.recyclerPopularMovie,it.results)
+            setDataToRecycler(binding.recyclerPopularMovie, it.results)
         }
 
     }
-    private fun getTopMovie() {
-        mainScreenViewModel.getTopMovie()
+
+    private fun getTopMovie(page: Int) {
+        //mainScreenViewModel.getTopMovie(page)
         mainScreenViewModel.topMovie.observe(viewLifecycleOwner) {
-            setDataToRecycler(binding.recyclerToprated,it.results)
+            setDataToRecycler(binding.recyclerToprated, it.results)
         }
 
     }
 
-    private fun getNowPlayingMovie() {
-        mainScreenViewModel.getNowPlaying()
+    private fun getNowPlayingMovie(page: Int) {
+        //mainScreenViewModel.getNowPlaying(page)
         mainScreenViewModel.nowMovie.observe(viewLifecycleOwner) {
-            setDataToRecycler(binding.recyclerNowPlaying,it.results)
+            setDataToRecycler(binding.recyclerNowPlaying, it.results)
         }
 
     }
-    private fun setDataToRecycler(recyclerView: RecyclerView,data: List<Movie_Tv.Result>) {
+
+    private fun getTopTv(page: Int) {
+        //mainScreenViewModel.getTopTv(page)
+        mainScreenViewModel.topTv.observe(viewLifecycleOwner) {
+            setDataToRecycler(binding.recyclerTopRatedTv, it.results)
+        }
+    }
+
+    private fun getPopularTv(page: Int) {
+        //mainScreenViewModel.getPopularTv(page)
+        mainScreenViewModel.popularTv.observe(viewLifecycleOwner) {
+            setDataToRecycler(binding.recyclerPopularTv, it.results)
+        }
+    }
+
+    private fun setDataToRecycler(recyclerView: RecyclerView, data: List<Movie_Tv.Result>) {
         mainAdapter = MovieAdapter(ArrayList(data), this)
         recyclerView.adapter = mainAdapter
         recyclerView.layoutManager =
@@ -132,13 +147,6 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
         intent.putExtra("SendData", movie)
 
         startActivity(intent)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        if (fireAuth.currentUser == null) {
-            findNavController().navigate(R.id.action_fragmentMain_to_signUpFragment)
-        }
     }
 }
 

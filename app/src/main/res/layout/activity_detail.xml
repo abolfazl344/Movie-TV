@@ -194,7 +194,7 @@
             <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
                 android:id="@+id/playerDetail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="250dp"
                 android:layout_margin="16dp"
                 app:handleNetworkEvents="true"
                 app:enableAutomaticInitialization="false"
@@ -202,6 +202,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_trailer" />
+
+            <TextView
+                android:id="@+id/txtTrailerError"
+                android:visibility="invisible"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:text="Trailer not found"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/playerDetail"
+                app:layout_constraintEnd_toEndOf="@+id/playerDetail"
+                app:layout_constraintStart_toStartOf="@+id/playerDetail"
+                app:layout_constraintTop_toTopOf="@+id/playerDetail" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>

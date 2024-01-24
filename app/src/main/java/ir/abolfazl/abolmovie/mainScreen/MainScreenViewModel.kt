@@ -8,14 +8,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import ir.abolfazl.abolmovie.model.MainRepository
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
+import ir.abolfazl.abolmovie.utils.Extensions.asyncRequest
 import javax.inject.Inject
 
-
 @HiltViewModel
-class MainScreenViewModel @Inject constructor(private val mainRepository: MainRepository) : ViewModel() {
+class MainScreenViewModel @Inject constructor(private val mainRepository: MainRepository) :
+    ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -28,12 +28,18 @@ class MainScreenViewModel @Inject constructor(private val mainRepository: MainRe
     private val _nowMovies = MutableLiveData<Movie_Tv>()
     val nowMovie get() : LiveData<Movie_Tv> = _nowMovies
 
-    fun getPopularMovie() {
-        mainRepository.getPopularMovie()
-            .subscribeOn(Schedulers.io())
+    private val _topTv = MutableLiveData<Movie_Tv>()
+    val topTv get() : LiveData<Movie_Tv> = _topTv
+
+    private val _popularTv = MutableLiveData<Movie_Tv>()
+    val popularTv get() : LiveData<Movie_Tv> = _popularTv
+
+    fun getPopularMovie(page: Int) {
+        mainRepository.getPopularMovie(page)
+            .asyncRequest()
             .subscribe(object : SingleObserver<Movie_Tv> {
                 override fun onSubscribe(d: Disposable) {
-                compositeDisposable.add(d)
+                    compositeDisposable.add(d)
                 }
 
                 override fun onError(e: Throwable) {
@@ -47,9 +53,9 @@ class MainScreenViewModel @Inject constructor(private val mainRepository: MainRe
             })
     }
 
-    fun getTopMovie() {
-        mainRepository.getTopMovie()
-            .subscribeOn(Schedulers.io())
+    fun getTopMovie(page: Int) {
+        mainRepository.getTopMovie(page)
+            .asyncRequest()
             .subscribe(object : SingleObserver<Movie_Tv> {
                 override fun onSubscribe(d: Disposable) {
                     compositeDisposable.add(d)
@@ -66,10 +72,10 @@ class MainScreenViewModel @Inject constructor(private val mainRepository: MainRe
             })
     }
 
-    fun getNowPlaying() {
+    fun getNowPlaying(page: Int) {
 
-        mainRepository.getNowPlaying()
-            .subscribeOn(Schedulers.io())
+        mainRepository.getNowPlaying(page)
+            .asyncRequest()
             .subscribe(object : SingleObserver<Movie_Tv> {
                 override fun onSubscribe(d: Disposable) {
                     compositeDisposable.add(d)
@@ -86,6 +92,45 @@ class MainScreenViewModel @Inject constructor(private val mainRepository: MainRe
             })
     }
 
+    fun getTopTv(page: Int) {
+        mainRepository
+            .getTopRatedTv(page)
+            .asyncRequest()
+            .subscribe(object : SingleObserver<Movie_Tv> {
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
+
+                override fun onError(e: Throwable) {
+
+                }
+
+                override fun onSuccess(t: Movie_Tv) {
+                    _topTv.postValue(t)
+                }
+
+            })
+    }
+
+    fun getPopularTv(page: Int) {
+        mainRepository
+            .getPopularTv(page)
+            .asyncRequest()
+            .subscribe(object : SingleObserver<Movie_Tv> {
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
+
+                override fun onError(e: Throwable) {
+
+                }
+
+                override fun onSuccess(t: Movie_Tv) {
+                    _popularTv.postValue(t)
+                }
+
+            })
+    }
 
     override fun onCleared() {
         super.onCleared()
