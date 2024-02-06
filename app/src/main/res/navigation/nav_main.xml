@@ -9,57 +9,24 @@
         android:name="ir.abolfazl.abolmovie.mainScreen.FragmentMain"
         android:label="FragmentMain">
         <action
-            android:id="@+id/action_fragmentMain_to_fragmentMovie"
-            app:destination="@id/fragmentMovie" />
-        <action
-            android:id="@+id/action_fragmentMain_to_fragmentSerial"
-            app:destination="@id/fragmentSerial" />
-        <action
-            android:id="@+id/action_fragmentMain_to_searchFragment"
-            app:destination="@id/searchFragment" />
-
-        <argument
-            android:name="username"
-            app:argType="string"
-            android:defaultValue="$" />
-        <action
-            android:id="@+id/action_fragmentMain_to_userFragment"
-            app:destination="@id/userFragment" />
+            android:id="@+id/action_fragmentMain_to_detailFragment"
+            app:destination="@id/detailFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragmentMovie"
         android:name="ir.abolfazl.abolmovie.movieScreen.FragmentMovie"
         android:label="FragmentMovie">
         <action
-            android:id="@+id/action_fragmentMovie_to_fragmentMain"
-            app:destination="@id/fragmentMain" />
-        <action
-            android:id="@+id/action_fragmentMovie_to_fragmentSerial"
-            app:destination="@id/fragmentSerial" />
-        <action
-            android:id="@+id/action_fragmentMovie_to_searchFragment"
-            app:destination="@id/searchFragment" />
-        <action
-            android:id="@+id/action_fragmentMovie_to_userFragment"
-            app:destination="@id/userFragment" />
+            android:id="@+id/action_fragmentMovie_to_detailFragment"
+            app:destination="@id/detailFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragmentSerial"
         android:name="ir.abolfazl.abolmovie.serialScreen.FragmentSerial"
         android:label="FragmentSerial">
         <action
-            android:id="@+id/action_fragmentSerial_to_fragmentMain"
-            app:destination="@id/fragmentMain" />
-        <action
-            android:id="@+id/action_fragmentSerial_to_fragmentMovie"
-            app:destination="@id/fragmentMovie" />
-        <action
-            android:id="@+id/action_fragmentSerial_to_searchFragment"
-            app:destination="@id/searchFragment" />
-        <action
-            android:id="@+id/action_fragmentSerial_to_userFragment"
-            app:destination="@id/userFragment" />
-
+            android:id="@+id/action_fragmentSerial_to_detailFragment"
+            app:destination="@id/detailFragment" />
     </fragment>
 
     <fragment
@@ -69,19 +36,14 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_fragmentLogin_to_fragmentMain"
-            app:destination="@id/fragmentMain" />
+            app:destination="@id/fragmentMain"
+            app:enterAnim="@anim/slide_from_left"
+            app:exitAnim="@anim/slide_to_right" />
         <action
             android:id="@+id/action_fragmentLogin_to_signUpFragment"
-            app:destination="@id/signUpFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/fragmentIntro"
-        android:name="ir.abolfazl.abolmovie.fragment.FragmentIntro"
-        android:label="fragment_intro"
-        tools:layout="@layout/fragment_intro">
-        <action
-            android:id="@+id/action_fragmentIntro2_to_fragmentLogin"
-            app:destination="@id/fragmentLogin" />
+            app:destination="@id/signUpFragment"
+            app:enterAnim="@anim/slide_from_right"
+            app:exitAnim="@anim/slide_to_left" />
     </fragment>
 
     <fragment
@@ -91,10 +53,14 @@
         tools:layout="@layout/fragment_sign_up">
         <action
             android:id="@+id/action_fragmentSignUp_to_fragmentMain"
-            app:destination="@id/fragmentMain" />
+            app:destination="@id/fragmentMain"
+            app:enterAnim="@anim/slide_from_left"
+            app:exitAnim="@anim/slide_to_right" />
         <action
             android:id="@+id/action_fragmentSignUp_to_fragmentLogin"
-            app:destination="@+id/fragmentLogin" />
+            app:destination="@+id/fragmentLogin"
+            app:enterAnim="@anim/slide_from_right"
+            app:exitAnim="@anim/slide_to_left" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -102,17 +68,8 @@
         android:label="fragment_search"
         tools:layout="@layout/fragment_search">
         <action
-            android:id="@+id/action_searchFragment_to_fragmentMovie"
-            app:destination="@id/fragmentMovie" />
-        <action
-            android:id="@+id/action_searchFragment_to_fragmentSerial"
-            app:destination="@id/fragmentSerial" />
-        <action
-            android:id="@+id/action_searchFragment_to_fragmentMain"
-            app:destination="@id/fragmentMain" />
-        <action
-            android:id="@+id/action_searchFragment_to_userFragment"
-            app:destination="@id/userFragment" />
+            android:id="@+id/action_searchFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
     </fragment>
     <fragment
         android:id="@+id/userFragment"
@@ -120,20 +77,8 @@
         android:label="fragment_user"
         tools:layout="@layout/fragment_user">
         <action
-            android:id="@+id/action_userFragment_to_fragmentMain"
-            app:destination="@id/fragmentMain" />
-        <action
-            android:id="@+id/action_userFragment_to_fragmentLogin"
-            app:destination="@id/fragmentLogin" />
-        <action
-            android:id="@+id/action_userFragment_to_searchFragment"
-            app:destination="@id/searchFragment" />
-        <action
-            android:id="@+id/action_userFragment_to_fragmentMovie"
-            app:destination="@id/fragmentMovie" />
-        <action
-            android:id="@+id/action_userFragment_to_fragmentSerial"
-            app:destination="@id/fragmentSerial" />
+            android:id="@+id/action_userFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
     </fragment>
     <fragment
         android:id="@+id/splashFragment"
@@ -141,13 +86,44 @@
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash" >
         <action
+            android:id="@+id/action_splashFragment_to_fragmentMain"
+            app:destination="@id/fragmentMain"
+            app:enterAnim="@anim/slide_from_right"
+            app:exitAnim="@anim/slide_to_left" />
+        <action
+            android:id="@+id/action_splashFragment_to_fragmentIntro2"
+            app:destination="@id/fragmentIntro"
+            app:enterAnim="@anim/slide_from_right"
+            app:exitAnim="@anim/slide_to_left" />
+        <action
             android:id="@+id/action_splashFragment_to_signUpFragment2"
-            app:destination="@id/signUpFragment" />
+            app:destination="@id/signUpFragment"
+            app:enterAnim="@anim/slide_from_right"
+            app:exitAnim="@anim/slide_to_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentIntro"
+        android:name="ir.abolfazl.abolmovie.fragment.FragmentIntro"
+        android:label="fragment_intro"
+        tools:layout="@layout/fragment_intro" >
         <action
-            android:id="@+id/action_splashFragment_to_fragmentIntro"
-            app:destination="@id/fragmentIntro" />
-        <action
-            android:id="@+id/action_splashFragment_to_fragmentMain3"
-            app:destination="@id/fragmentMain" />
+            android:id="@+id/action_fragmentIntro_to_fragmentLogin2"
+            app:destination="@id/fragmentLogin"
+            app:enterAnim="@anim/slide_from_right"
+            app:exitAnim="@anim/slide_to_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/moreFragment"
+        android:name="ir.abolfazl.abolmovie.MoreFragment"
+        android:label="fragment_more"
+        tools:layout="@layout/fragment_more" />
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="ir.abolfazl.abolmovie.DetailFragment"
+        android:label="fragment_detail"
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="detail"
+            app:argType="ir.abolfazl.abolmovie.model.Local.Movie_Tv" />
     </fragment>
 </navigation>

@@ -10,14 +10,12 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.Activity.DetailActivity
-import ir.abolfazl.abolmovie.model.MovieAdapter
-import ir.abolfazl.abolmovie.R
+import ir.abolfazl.abolmovie.Adapter.MovieAdapter
 import ir.abolfazl.abolmovie.databinding.FragmentMainBinding
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import ir.abolfazl.abolmovie.utils.Extensions.mainActivity
@@ -27,7 +25,7 @@ import kotlin.collections.ArrayList
 @AndroidEntryPoint
 class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
     lateinit var binding: FragmentMainBinding
-    private val mainScreenViewModel: MainScreenViewModel by viewModels()
+    private val mainScreenViewModel: MainScreenViewModel by viewModels({ requireActivity() })
     private lateinit var mainAdapter: MovieAdapter
 
     @Inject
@@ -44,89 +42,56 @@ class FragmentMain : Fragment(), MovieAdapter.ItemSelected {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mainActivity().binding.bottomNavigation.visibility = View.VISIBLE
-        fetchData()
         initUi()
         binding.refreshLayoutMain.setOnRefreshListener {
-            fetchData()
+            mainActivity().mainData()
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.refreshLayoutMain.isRefreshing = false
             }, 1500)
         }
 
-        mainActivity().binding.bottomNavigation.setOnItemSelectedListener {
-
-            when (it.itemId) {
-                R.id.btn_TV_menu -> {
-                    findNavController().navigate(R.id.action_fragmentMain_to_fragmentSerial)
-                }
-
-                R.id.btn_Movie_menu -> {
-                    findNavController().navigate(R.id.action_fragmentMain_to_fragmentMovie)
-                }
-
-                R.id.btn_search_menu -> {
-                    findNavController().navigate(R.id.action_fragmentMain_to_searchFragment)
-                }
-
-                R.id.btn_Profile_menu -> {
-                    findNavController().navigate(R.id.action_fragmentMain_to_userFragment)
-                }
-            }
-            true
-        }
-
         requireActivity().onBackPressedDispatcher.addCallback {
             requireActivity().finish()
         }
+
     }
 
     private fun initUi() {
-        getNowPlayingMovie(1)
+        getNowPlayingMovie()
         getPopularMovie()
-        getTopMovie(1)
-        getTopTv(1)
-        getPopularTv(1)
+        getTopMovie()
+        getTopTv()
+        getPopularTv()
     }
-    private fun fetchData() {
-        mainScreenViewModel.getPopularMovie(1)
-        mainScreenViewModel.getTopMovie(1)
-        mainScreenViewModel.getNowPlaying(1)
-        mainScreenViewModel.getTopTv(1)
-        mainScreenViewModel.getPopularTv(1)
-    }
+
     private fun getPopularMovie() {
-        //mainScreenViewModel.getPopularMovie(page)
         mainScreenViewModel.popularMovie.observe(viewLifecycleOwner) {
             setDataToRecycler(binding.recyclerPopularMovie, it.results)
         }
 
     }
 
-    private fun getTopMovie(page: Int) {
-        //mainScreenViewModel.getTopMovie(page)
+    private fun getTopMovie() {
         mainScreenViewModel.topMovie.observe(viewLifecycleOwner) {
             setDataToRecycler(binding.recyclerToprated, it.results)
         }
 
     }
 
-    private fun getNowPlayingMovie(page: Int) {
-        //mainScreenViewModel.getNowPlaying(page)
+    private fun getNowPlayingMovie() {
         mainScreenViewModel.nowMovie.observe(viewLifecycleOwner) {
             setDataToRecycler(binding.recyclerNowPlaying, it.results)
         }
 
     }
 
-    private fun getTopTv(page: Int) {
-        //mainScreenViewModel.getTopTv(page)
+    private fun getTopTv() {
         mainScreenViewModel.topTv.observe(viewLifecycleOwner) {
             setDataToRecycler(binding.recyclerTopRatedTv, it.results)
         }
     }
 
-    private fun getPopularTv(page: Int) {
-        //mainScreenViewModel.getPopularTv(page)
+    private fun getPopularTv() {
         mainScreenViewModel.popularTv.observe(viewLifecycleOwner) {
             setDataToRecycler(binding.recyclerPopularTv, it.results)
         }

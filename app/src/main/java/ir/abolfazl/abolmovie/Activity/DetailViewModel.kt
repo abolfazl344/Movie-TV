@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import ir.abolfazl.abolmovie.model.Local.Credits
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import ir.abolfazl.abolmovie.model.Local.Trailer
 import ir.abolfazl.abolmovie.model.MainRepository
@@ -16,23 +17,27 @@ import ir.abolfazl.abolmovie.utils.Extensions.asyncRequest
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailViewModel @Inject constructor(private val mainRepository: MainRepository) : ViewModel() {
+class DetailViewModel @Inject constructor(private val mainRepository: MainRepository) :
+    ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val _trailer  = MutableLiveData<Trailer>()
+    private val _trailer = MutableLiveData<Trailer>()
     val trailer get() : LiveData<Trailer> = _trailer
-    fun getMovieTrailer(movieID : Int){
+
+    private val _credits = MutableLiveData<Credits>()
+    val credits get() : LiveData<Credits> = _credits
+    fun getMovieTrailer(movieID: Int) {
         mainRepository
             .getMovieTrailer(movieID)
             .asyncRequest()
-            .subscribe(object : SingleObserver<Trailer>{
+            .subscribe(object : SingleObserver<Trailer> {
                 override fun onSubscribe(d: Disposable) {
                     compositeDisposable.add(d)
                 }
 
                 override fun onError(e: Throwable) {
-                    Log.v("errorTrailer",e.message!!)
+                    Log.v("errorTrailer", e.message!!)
                 }
 
                 override fun onSuccess(t: Trailer) {
@@ -42,17 +47,17 @@ class DetailViewModel @Inject constructor(private val mainRepository: MainReposi
             })
     }
 
-    fun getTvTrailer(serialID : Int){
+    fun getTvTrailer(serialID: Int) {
         mainRepository
             .getTvTrailer(serialID)
             .asyncRequest()
-            .subscribe(object : SingleObserver<Trailer>{
+            .subscribe(object : SingleObserver<Trailer> {
                 override fun onSubscribe(d: Disposable) {
                     compositeDisposable.add(d)
                 }
 
                 override fun onError(e: Throwable) {
-                    Log.v("errorTrailer",e.message!!)
+                    Log.v("errorTrailer", e.message!!)
                 }
 
                 override fun onSuccess(t: Trailer) {
@@ -61,6 +66,47 @@ class DetailViewModel @Inject constructor(private val mainRepository: MainReposi
 
             })
     }
+
+    fun getCreditsMovie(movieID: Int) {
+        mainRepository
+            .getCreditsMovie(movieID)
+            .asyncRequest()
+            .subscribe(object : SingleObserver<Credits> {
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.v("errorCredits", e.message!!)
+                }
+
+                override fun onSuccess(t: Credits) {
+                    _credits.postValue(t)
+                }
+
+            })
+    }
+
+    fun getCreditsTv(seriesID: Int) {
+        mainRepository
+            .getCreditsTv(seriesID)
+            .asyncRequest()
+            .subscribe(object : SingleObserver<Credits>{
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.v("errorCredits",e.message!!)
+                }
+
+                override fun onSuccess(t: Credits) {
+                    _credits.postValue(t)
+                }
+
+            })
+    }
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()

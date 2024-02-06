@@ -1,6 +1,7 @@
 package ir.abolfazl.abolmovie.model
 
 import io.reactivex.Single
+import ir.abolfazl.abolmovie.model.Local.Credits
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import ir.abolfazl.abolmovie.model.Local.Trailer
 import ir.abolfazl.abolmovie.model.api.ApiService
@@ -35,7 +36,7 @@ class MainRepository @Inject constructor(private val apiService: ApiService) {
         return apiService.discoverMovie(page)
     }
 
-    fun discoverSerial(page: Int) : Single<Movie_Tv>{
+    fun discoverTv(page: Int) : Single<Movie_Tv>{
 
         return apiService.discoverSerial(page)
     }
@@ -53,5 +54,15 @@ class MainRepository @Inject constructor(private val apiService: ApiService) {
     fun searchMovie(title : String) : Single<Movie_Tv>{
 
         return apiService.searchMovie(title)
+    }
+
+    fun getCreditsMovie(movieID: Int) : Single<Credits>{
+
+        return apiService.getCreditsMovie(movieID)
+    }
+
+    fun getCreditsTv(seriesID: Int) : Single<Credits>{
+
+        return apiService.getCreditsTv(seriesID)
     }
 }

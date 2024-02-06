@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,8 +55,7 @@ class SignUpFragment : Fragment() {
                             if (signUpScreenViewModel.signupState) {
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     binding.layoutSignIn.visibility = View.INVISIBLE
-                                    val action = SignUpFragmentDirections.actionFragmentSignUpToFragmentMain(username)
-                                    findNavController().navigate(action)
+                                    findNavController().navigate(R.id.action_fragmentSignUp_to_fragmentMain)
                                 }, 1500)
                             } else {
                                 Handler(Looper.getMainLooper()).postDelayed({
@@ -79,6 +79,10 @@ class SignUpFragment : Fragment() {
 
         binding.txtLogin.setOnClickListener {
             findNavController().navigate(R.id.action_fragmentSignUp_to_fragmentLogin)
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback {
+            requireActivity().finish()
         }
     }
 

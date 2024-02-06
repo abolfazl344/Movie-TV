@@ -1,6 +1,5 @@
-package ir.abolfazl.abolmovie.model
+package ir.abolfazl.abolmovie.Adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,37 +7,41 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import ir.abolfazl.abolmovie.R
+import ir.abolfazl.abolmovie.databinding.ItemRecyclerCreditsBinding
 import ir.abolfazl.abolmovie.utils.BASE_URL_IMAGE
-import ir.abolfazl.abolmovie.model.Local.Movie_Tv
-import ir.abolfazl.abolmovie.databinding.ItemRecyclerMovieBinding
+import ir.abolfazl.abolmovie.model.Local.Credits
 
-class MovieAdapter(private val data: ArrayList<Movie_Tv.Result>, val selectedItem: ItemSelected) :
-    RecyclerView.Adapter<MovieAdapter.MainViewHolder>() {
-    lateinit var binding: ItemRecyclerMovieBinding
+class CastAdapter(private val data: ArrayList<Credits.Cast>, val selectedItem: ItemSelected) :
+    RecyclerView.Adapter<CastAdapter.MainViewHolder>() {
+    lateinit var binding: ItemRecyclerCreditsBinding
 
     inner class MainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bindData(movie: Movie_Tv.Result) {
+        fun bindData(credits: Credits.Cast) {
 
             Glide
                 .with(itemView.context)
-                .load(BASE_URL_IMAGE + movie.posterPath)
+                .load(BASE_URL_IMAGE + credits.profilePath)
                 .apply(
                     RequestOptions()
                         .skipMemoryCache(true)
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 )
-                .into(binding.imgItemMovie)
+                .into(binding.circleImageView)
+
+            binding.txtNameActor.text = credits.name
+            binding.txtNameCharacter.text = credits.character
 
             itemView.setOnClickListener {
-                selectedItem.itemSelected(movie)
+                selectedItem.itemSelected(credits)
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        binding = ItemRecyclerMovieBinding.inflate(layoutInflater, parent, false)
+        binding = ItemRecyclerCreditsBinding.inflate(layoutInflater, parent, false)
         return MainViewHolder(binding.root)
 
     }
@@ -51,25 +54,14 @@ class MovieAdapter(private val data: ArrayList<Movie_Tv.Result>, val selectedIte
         return data.size
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun addData(newData: List<Movie_Tv.Result>) {
-        val startPosition = data.size
+    fun refreshData(newData: List<Credits.Cast>) {
+        data.clear()
         data.addAll(newData)
-        notifyItemRangeInserted(startPosition,newData.size)
+        notifyDataSetChanged()
     }
 
-    fun refreshData(newData: List<Movie_Tv.Result>){
-        data.clear()
-        data.addAll(newData)
-        notifyDataSetChanged()
-    }
-    fun clearData(){
-        data.clear()
-        notifyDataSetChanged()
-    }
     interface ItemSelected {
-
-        fun itemSelected(movie: Movie_Tv.Result)
+        fun itemSelected(credits: Credits.Cast)
     }
 
 }

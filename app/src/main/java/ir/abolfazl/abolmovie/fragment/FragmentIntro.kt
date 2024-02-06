@@ -23,7 +23,7 @@ class FragmentIntro : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mainActivity().binding.bottomNavigation.visibility = View.INVISIBLE
         binding.btnGetIn.setOnClickListener {
-            findNavController().navigate(R.id.action_fragmentIntro2_to_fragmentLogin)
+            findNavController().navigate(R.id.action_fragmentIntro_to_fragmentLogin2)
         }
 
     }

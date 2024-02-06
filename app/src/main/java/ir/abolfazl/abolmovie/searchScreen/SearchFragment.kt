@@ -10,23 +10,20 @@ import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.Activity.DetailActivity
-import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentSearchBinding
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
-import ir.abolfazl.abolmovie.model.MovieAdapter
-import ir.abolfazl.abolmovie.utils.Extensions.mainActivity
+import ir.abolfazl.abolmovie.Adapter.MovieAdapter
 
 @AndroidEntryPoint
 class SearchFragment : Fragment(), MovieAdapter.ItemSelected {
     lateinit var binding: FragmentSearchBinding
     private lateinit var searchAdapter: MovieAdapter
-    private val searchScreenViewModel: SearchScreenViewModel by viewModels()
+    private val searchScreenViewModel: SearchScreenViewModel by viewModels({requireActivity()})
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,28 +35,6 @@ class SearchFragment : Fragment(), MovieAdapter.ItemSelected {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        mainActivity().binding.bottomNavigation.setOnItemSelectedListener {
-
-            when (it.itemId) {
-                R.id.btn_Home_menu -> {
-                    findNavController().navigate(R.id.action_searchFragment_to_fragmentMain)
-                }
-
-                R.id.btn_TV_menu -> {
-                    findNavController().navigate(R.id.action_searchFragment_to_fragmentSerial)
-                }
-
-                R.id.btn_Movie_menu -> {
-                    findNavController().navigate(R.id.action_searchFragment_to_fragmentMovie)
-                }
-
-                R.id.btn_Profile_menu -> {
-                    findNavController().navigate(R.id.action_searchFragment_to_userFragment)
-                }
-            }
-            true
-        }
 
         binding.edtSearch.addTextChangedListener { txt ->
             if (txt.toString().isNotEmpty()) {

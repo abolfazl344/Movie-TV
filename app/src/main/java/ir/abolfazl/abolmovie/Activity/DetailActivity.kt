@@ -1,10 +1,10 @@
 package ir.abolfazl.abolmovie.Activity
 
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -12,15 +12,22 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.FullscreenListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions
 import dagger.hilt.android.AndroidEntryPoint
+import ir.abolfazl.abolmovie.Adapter.CastAdapter
+import ir.abolfazl.abolmovie.Adapter.CrewAdapter
 import ir.abolfazl.abolmovie.databinding.ActivityDetailBinding
+import ir.abolfazl.abolmovie.model.Local.Credits
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import ir.abolfazl.abolmovie.utils.BASE_URL_IMAGE
+import ir.abolfazl.abolmovie.utils.Extensions.showToast
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
-class DetailActivity : AppCompatActivity() {
+class DetailActivity : AppCompatActivity(), CastAdapter.ItemSelected, CrewAdapter.ItemSelected {
     lateinit var binding: ActivityDetailBinding
+    private lateinit var castAdapter: CastAdapter
+    private lateinit var crewAdapter: CrewAdapter
 
     @Inject
     lateinit var glide: RequestManager
@@ -46,9 +53,11 @@ class DetailActivity : AppCompatActivity() {
         if (dataMovie.releaseDate != null) {
             binding.txtRelease.text = dataMovie.releaseDate
             getMovieTrailer(dataMovie.id)
+            getCreditsMovie(dataMovie.id)
         } else if (dataMovie.firstAirDate != null) {
-            getTvTrailer(dataMovie.id)
             binding.txtRelease.text = dataMovie.firstAirDate
+            getTvTrailer(dataMovie.id)
+            getCreditsTv(dataMovie.id)
         }
         if (dataMovie.title != null) {
             binding.txtTitle.text = dataMovie.title
@@ -89,6 +98,56 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun getCreditsMovie(movieID: Int) {
+        detailViewModel.getCreditsMovie(movieID)
+        detailViewModel.credits.observe(this) {
+            if (it.cast!!.isNotEmpty()) {
+                setupRecyclerCast(it.cast)
+            }
+            if (it.crew!!.isNotEmpty()) {
+                setupRecyclerCrew(it.crew)
+            }
+        }
+    }
+
+    private fun getCreditsTv(serialID: Int) {
+        detailViewModel.getCreditsTv(serialID)
+        detailViewModel.credits.observe(this) {
+            if (it.cast!!.isNotEmpty()) {
+                setupRecyclerCast(it.cast)
+            }
+            if (it.crew!!.isNotEmpty()) {
+                setupRecyclerCrew(it.crew)
+            }
+        }
+    }
+
+    private fun setupRecyclerCast(cast: List<Credits.Cast>) {
+        if (!::castAdapter.isInitialized) {
+            castAdapter = CastAdapter(ArrayList(cast), this)
+            binding.recyclerCast.adapter = castAdapter
+            val layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            binding.recyclerCast.layoutManager = layoutManager
+            binding.recyclerCast.recycledViewPool.setMaxRecycledViews(0, 0)
+        } else {
+            castAdapter.refreshData(cast)
+        }
+    }
+
+    private fun setupRecyclerCrew(crew: List<Credits.Crew>) {
+        if (!::crewAdapter.isInitialized) {
+            crewAdapter = CrewAdapter(ArrayList(crew), this)
+            binding.recyclerCrew.adapter = crewAdapter
+            val layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            binding.recyclerCrew.layoutManager = layoutManager
+            binding.recyclerCrew.recycledViewPool.setMaxRecycledViews(0, 0)
+        } else {
+            crewAdapter.refreshData(crew)
+        }
+    }
+
     private fun loadTrailer(videoID: String) {
         val listener = object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
@@ -99,7 +158,7 @@ class DetailActivity : AppCompatActivity() {
         binding.playerDetail.initialize(listener, option)
         binding.playerDetail.addFullscreenListener(object : FullscreenListener {
             override fun onEnterFullscreen(fullscreenView: View, exitFullscreen: () -> Unit) {
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
             }
 
             override fun onExitFullscreen() {
@@ -108,5 +167,13 @@ class DetailActivity : AppCompatActivity() {
 
         })
         lifecycle.addObserver(binding.playerDetail)
+    }
+
+    override fun itemSelected(credits: Credits.Cast) {
+        showToast("cast")
+    }
+
+    override fun itemSelected(credits: Credits.Crew) {
+        showToast("crew")
     }
 }

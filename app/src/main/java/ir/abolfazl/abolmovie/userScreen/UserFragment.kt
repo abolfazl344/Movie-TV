@@ -1,16 +1,17 @@
 package ir.abolfazl.abolmovie.userScreen
 
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentUserBinding
-import ir.abolfazl.abolmovie.utils.Extensions.mainActivity
 import ir.abolfazl.abolmovie.utils.Extensions.showToast
 import javax.inject.Inject
 
@@ -32,36 +33,22 @@ class UserFragment : Fragment() {
         val username = fireAuth.currentUser?.displayName
         val email = fireAuth.currentUser?.email
 
-        mainActivity().binding.bottomNavigation.setOnItemSelectedListener {
-
-            when (it.itemId) {
-                R.id.btn_Home_menu -> {
-                    findNavController().navigate(R.id.action_userFragment_to_fragmentMain)
-                }
-                R.id.btn_Movie_menu -> {
-                    findNavController().navigate(R.id.action_userFragment_to_fragmentMovie)
-                }
-                R.id.btn_TV_menu -> {
-                    findNavController().navigate(R.id.action_userFragment_to_fragmentSerial)
-                }
-
-                R.id.btn_search_menu ->{
-                    findNavController().navigate(R.id.action_userFragment_to_searchFragment)
-                }
-            }
-            true
-        }
-
         if(email!!.isNotEmpty() && username!!.isNotEmpty()){
             binding.txtEmail.text = email
             binding.txtUsername.text = username
-        }else
-            requireActivity().showToast("error")
+        }else {
+            binding.txtEmail.text = "Error receiving email"
+            binding.txtUsername.text = "Error receiving username"
+        }
 
         binding.btnLogout.setOnClickListener {
             fireAuth.signOut()
-            findNavController().navigate(R.id.action_userFragment_to_fragmentLogin)
+            findNavController().navigate(R.id.action_userFragment_to_signUpFragment)
             requireActivity().showToast("SignOut is successfully")
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback {
+            requireActivity().finish()
         }
     }
 

@@ -1,6 +1,7 @@
 package ir.abolfazl.abolmovie.model.api
 
 import io.reactivex.Single
+import ir.abolfazl.abolmovie.model.Local.Credits
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import ir.abolfazl.abolmovie.model.Local.Trailer
 import retrofit2.http.GET
@@ -38,4 +39,10 @@ interface ApiService {
 
     @GET("tv/popular")
     fun getPopularTv(@Query("page") page:Int = 1) : Single<Movie_Tv>
+
+    @GET("movie/{movie_id}/credits")
+    fun getCreditsMovie(@Path("movie_id") movie_id : Int) : Single<Credits>
+
+    @GET("tv/{series_id}/credits")
+    fun getCreditsTv(@Path("series_id") series_id : Int) : Single<Credits>
 }

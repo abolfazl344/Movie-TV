@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,6 +43,10 @@ class FragmentLogin : Fragment() {
         binding.txtSignUp.setOnClickListener {
             findNavController().navigate(R.id.action_fragmentLogin_to_signUpFragment)
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback {
+            requireActivity().finish()
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -52,10 +57,7 @@ class FragmentLogin : Fragment() {
             if (loginScreenViewModel.loginState) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     binding.layoutSignIn.visibility = View.INVISIBLE
-                    val action = FragmentLoginDirections.actionFragmentLoginToFragmentMain(
-                        loginScreenViewModel.user
-                    )
-                    findNavController().navigate(action)
+                    findNavController().navigate(R.id.action_fragmentLogin_to_fragmentMain)
                 }, 1500)
             } else {
                 Handler(Looper.getMainLooper()).postDelayed({
