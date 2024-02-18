@@ -3,6 +3,7 @@ package ir.abolfazl.abolmovie.model.api
 import io.reactivex.Single
 import ir.abolfazl.abolmovie.model.Local.Credits
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
+import ir.abolfazl.abolmovie.model.Local.Person
 import ir.abolfazl.abolmovie.model.Local.Trailer
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -34,6 +35,9 @@ interface ApiService {
     @GET("search/movie")
     fun searchMovie(@Query("query") query:String) : Single<Movie_Tv>
 
+    @GET("search/tv")
+    fun searchTv(@Query("query") query:String) : Single<Movie_Tv>
+
     @GET("tv/top_rated")
     fun getTopRatedTv(@Query("page") page:Int = 1) : Single<Movie_Tv>
 
@@ -45,4 +49,16 @@ interface ApiService {
 
     @GET("tv/{series_id}/credits")
     fun getCreditsTv(@Path("series_id") series_id : Int) : Single<Credits>
+
+    @GET("movie/{movie_id}/recommendations")
+    fun getRecommendationMovie(@Path("movie_id") movie_id : Int) : Single<Movie_Tv>
+
+    @GET("tv/{series_id}/recommendations")
+    fun getRecommendationTv(@Path("series_id") series_id : Int) : Single<Movie_Tv>
+
+    @GET("person/{person_id}")
+    fun getPerson(@Path("person_id") person_id : Int) : Single<Person>
+
+    @GET("person/{person_id}/combined_credits")
+    fun getPersonCredits(@Path("person_id") person_id : Int) : Single<Movie_Tv>
 }

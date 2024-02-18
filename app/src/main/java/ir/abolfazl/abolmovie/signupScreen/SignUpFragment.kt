@@ -8,20 +8,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.FragmentSignUpBinding
 import ir.abolfazl.abolmovie.utils.Extensions.mainActivity
-import ir.abolfazl.abolmovie.utils.Extensions.showToast
 
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {
     private lateinit var binding: FragmentSignUpBinding
     private val signUpScreenViewModel: SignUpScreenViewModel by viewModels()
-    private val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"
     private var username = ""
     private var email = ""
     private var password = ""
@@ -46,48 +43,32 @@ class SignUpFragment : Fragment() {
             password = binding.edtPassword.text.toString()
             confirmPassword = binding.edtConfirmPassword.text.toString()
 
-            if (username.isNotEmpty() && username.length >= 3) {
-                if (email.isNotEmpty() && isValidEmail(email)) {
-                    if (password.isNotEmpty() && password.length >= 4) {
-                        if (confirmPassword.isNotEmpty() && confirmPassword == password) {
-                            signUpScreenViewModel.signUpUser(email, password, username)
-                            binding.layoutSignIn.visibility = View.VISIBLE
+            if (username.length >= 3) {
+                if (password.length >= 4) {
+                    if (confirmPassword.isNotEmpty() && confirmPassword == password) {
+                        signUpScreenViewModel.signUpUser(email, password, username)
+                        binding.layoutSignIn.visibility = View.VISIBLE
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            binding.layoutSignIn.visibility = View.INVISIBLE
                             if (signUpScreenViewModel.signupState) {
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    binding.layoutSignIn.visibility = View.INVISIBLE
-                                    findNavController().navigate(R.id.action_fragmentSignUp_to_fragmentMain)
-                                }, 1500)
+                                findNavController().navigate(R.id.to_fragmentMain)
                             } else {
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    binding.layoutSignIn.visibility = View.INVISIBLE
-                                    requireActivity().showToast("Signup not complete!")
-                                },1500)
+                                binding.txtError.text = signUpScreenViewModel.exceptionSignUp
                             }
-                        } else {
-                            binding.txtError.text = "ConfirmPassword not equal to password"
-                        }
+                        }, 2000)
                     } else {
-                        binding.txtError.text = "Enter Password or longer than 4 word"
+                        binding.txtError.text = "ConfirmPassword not equal to password"
                     }
                 } else {
-                    binding.txtError.text = "Enter a valid Email"
+                    binding.txtError.text = "Enter Password or longer than 4 word"
                 }
             } else {
                 binding.txtError.text = "Enter a username or longer than 4 word"
             }
         }
-
         binding.txtLogin.setOnClickListener {
-            findNavController().navigate(R.id.action_fragmentSignUp_to_fragmentLogin)
+            findNavController().navigate(R.id.to_fragmentLogin)
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback {
-            requireActivity().finish()
-        }
     }
-
-    private fun isValidEmail(email: String): Boolean {
-        return email.matches(emailRegex.toRegex())
-    }
-
 }

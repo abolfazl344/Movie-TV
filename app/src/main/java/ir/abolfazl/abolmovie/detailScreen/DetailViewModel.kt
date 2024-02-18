@@ -1,4 +1,4 @@
-package ir.abolfazl.abolmovie.Activity
+package ir.abolfazl.abolmovie.detailScreen
 
 
 import android.util.Log
@@ -20,6 +20,8 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(private val mainRepository: MainRepository) :
     ViewModel() {
 
+    lateinit var dataMovie : Movie_Tv.Result
+
     private val compositeDisposable = CompositeDisposable()
 
     private val _trailer = MutableLiveData<Trailer>()
@@ -27,6 +29,11 @@ class DetailViewModel @Inject constructor(private val mainRepository: MainReposi
 
     private val _credits = MutableLiveData<Credits>()
     val credits get() : LiveData<Credits> = _credits
+
+    private val _recommend = MutableLiveData<Movie_Tv>()
+    val recommend get() : LiveData<Movie_Tv> = _recommend
+
+
     fun getMovieTrailer(movieID: Int) {
         mainRepository
             .getMovieTrailer(movieID)
@@ -102,6 +109,46 @@ class DetailViewModel @Inject constructor(private val mainRepository: MainReposi
 
                 override fun onSuccess(t: Credits) {
                     _credits.postValue(t)
+                }
+
+            })
+    }
+
+    fun getRecommendMovie(movieID: Int){
+        mainRepository
+            .getRecommendMovie(movieID)
+            .asyncRequest()
+            .subscribe(object : SingleObserver<Movie_Tv>{
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
+
+                override fun onError(e: Throwable) {
+
+                }
+
+                override fun onSuccess(t: Movie_Tv) {
+                    _recommend.postValue(t)
+                }
+
+            })
+    }
+
+    fun getRecommendTv(seriesID: Int){
+        mainRepository
+            .getRecommendTv(seriesID)
+            .asyncRequest()
+            .subscribe(object : SingleObserver<Movie_Tv>{
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
+
+                override fun onError(e: Throwable) {
+
+                }
+
+                override fun onSuccess(t: Movie_Tv) {
+                    _recommend.postValue(t)
                 }
 
             })

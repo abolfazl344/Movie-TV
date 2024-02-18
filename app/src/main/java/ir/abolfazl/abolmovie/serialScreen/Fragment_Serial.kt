@@ -11,13 +11,16 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import ir.abolfazl.abolmovie.Activity.DetailActivity
 import ir.abolfazl.abolmovie.databinding.FragmentSerialBinding
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import ir.abolfazl.abolmovie.Adapter.MovieAdapter
+import ir.abolfazl.abolmovie.detailScreen.DetailFragment
+import ir.abolfazl.abolmovie.mainScreen.FragmentMainDirections
+import ir.abolfazl.abolmovie.utils.Extensions.showToast
 
 @AndroidEntryPoint
 class FragmentSerial : Fragment(), MovieAdapter.ItemSelected {
@@ -25,6 +28,7 @@ class FragmentSerial : Fragment(), MovieAdapter.ItemSelected {
     private lateinit var serialAdapter: MovieAdapter
     private val serialScreenViewModel: SerialScreenViewModel by viewModels({ requireActivity() })
     private var page = 2
+    private var backPressedCount = 0
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,7 +41,7 @@ class FragmentSerial : Fragment(), MovieAdapter.ItemSelected {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         discoverTv()
         binding.swipeSerial.setOnRefreshListener {
-            if(::serialAdapter.isInitialized){
+            if (::serialAdapter.isInitialized) {
                 serialAdapter.clearData()
             }
             serialScreenViewModel.discoverTv(1)
@@ -48,13 +52,23 @@ class FragmentSerial : Fragment(), MovieAdapter.ItemSelected {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback {
-            requireActivity().finish()
+            if (backPressedCount == 1) {
+                requireActivity().finish()
+            } else {
+                backPressedCount++
+                requireActivity().showToast("Press back again to exit")
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    backPressedCount = 0
+                }, 2000)
+            }
         }
+
     }
 
     private fun discoverTv() {
         serialScreenViewModel.discoverTv.observe(viewLifecycleOwner) {
-            Log.v("testData",it.toString())
+            Log.v("testData", it.toString())
             setupRecyclerView(it.results)
         }
 
@@ -99,12 +113,8 @@ class FragmentSerial : Fragment(), MovieAdapter.ItemSelected {
      */
 
     override fun itemSelected(movie: Movie_Tv.Result) {
-
-        val intent = Intent(requireContext(), DetailActivity::class.java)
-
-        intent.putExtra("SendData", movie)
-
-        startActivity(intent)
+        val action = FragmentSerialDirections.toDetailActivity(movie)
+        findNavController().navigate(action)
     }
 
 }

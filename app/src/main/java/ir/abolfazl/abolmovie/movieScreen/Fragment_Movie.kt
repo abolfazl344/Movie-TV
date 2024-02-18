@@ -1,6 +1,5 @@
 package ir.abolfazl.abolmovie.movieScreen
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,19 +9,24 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import ir.abolfazl.abolmovie.Activity.DetailActivity
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import ir.abolfazl.abolmovie.databinding.FragmentMovieBinding
 import ir.abolfazl.abolmovie.Adapter.MovieAdapter
+import ir.abolfazl.abolmovie.detailScreen.DetailFragment
+import ir.abolfazl.abolmovie.mainScreen.FragmentMainDirections
+import ir.abolfazl.abolmovie.serialScreen.FragmentSerialDirections
+import ir.abolfazl.abolmovie.utils.Extensions.showToast
 
 @AndroidEntryPoint
 class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
     private lateinit var binding: FragmentMovieBinding
     private lateinit var movieAdapter: MovieAdapter
     private val movieScreenViewModel: MovieScreenViewModel by viewModels({ requireActivity() })
+    private var backPressedCount = 0
     private var page = 2
 
     override fun onCreateView(
@@ -48,7 +52,16 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback {
-            requireActivity().finish()
+            if (backPressedCount == 1) {
+                requireActivity().finish()
+            } else {
+                backPressedCount++
+                requireActivity().showToast("Press back again to exit")
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    backPressedCount = 0
+                }, 2000)
+            }
         }
     }
 
@@ -96,12 +109,8 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
      */
 
     override fun itemSelected(movie: Movie_Tv.Result) {
-
-        val intent = Intent(requireContext(), DetailActivity::class.java)
-
-        intent.putExtra("SendData", movie)
-
-        startActivity(intent)
+        val action = FragmentMovieDirections.toDetailActivity(movie)
+        findNavController().navigate(action)
     }
 
 }

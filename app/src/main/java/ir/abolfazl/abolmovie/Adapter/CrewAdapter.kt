@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import ir.abolfazl.abolmovie.databinding.ItemRecyclerCreditsBinding
 import ir.abolfazl.abolmovie.utils.BASE_URL_IMAGE
 import ir.abolfazl.abolmovie.model.Local.Credits
+import ir.abolfazl.abolmovie.utils.BASE_URL_IMAGE_CREDITS
 
 class CrewAdapter(private val data: ArrayList<Credits.Crew>, val selectedItem: ItemSelected) :
     RecyclerView.Adapter<CrewAdapter.MainViewHolder>() {
@@ -21,13 +23,15 @@ class CrewAdapter(private val data: ArrayList<Credits.Crew>, val selectedItem: I
 
                 Glide
                     .with(itemView.context)
-                    .load(BASE_URL_IMAGE + credits.profilePath)
+                    .load(BASE_URL_IMAGE_CREDITS + credits.profilePath)
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .apply(
                         RequestOptions()
+                            .circleCrop()
                             .skipMemoryCache(true)
                             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     )
-                    .into(binding.circleImageView)
+                    .into(binding.imageView)
 
             binding.txtNameActor.text = credits.name
             binding.txtNameCharacter.text = credits.knownForDepartment

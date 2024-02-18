@@ -40,16 +40,16 @@ class SplashFragment : Fragment() {
 
         if (firstRun) {
             Handler(Looper.getMainLooper()).postDelayed({
-                findNavController().navigate(R.id.action_splashFragment_to_fragmentIntro2)
+                findNavController().navigate(R.id.to_fragmentIntro)
                 prefs.edit().putBoolean("KEY_FIRST_RUN", false).apply()
 
             }, 6000)
         }else {
             Handler(Looper.getMainLooper()).postDelayed({
                 if (fireAuth.currentUser == null) {
-                    findNavController().navigate(R.id.action_splashFragment_to_signUpFragment2)
+                    findNavController().navigate(R.id.to_fragmentSignUp)
                 } else
-                    findNavController().navigate(R.id.action_splashFragment_to_fragmentMain)
+                    findNavController().navigate(R.id.to_fragmentMain)
             }, 6000)
         }
     }

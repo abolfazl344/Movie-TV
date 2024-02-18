@@ -16,9 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AbolMovie"
         tools:targetApi="31">
-
         <activity
-            android:name=".Activity.DetailActivity"
+            android:name=".detailScreen.DetailActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.MainActivity"

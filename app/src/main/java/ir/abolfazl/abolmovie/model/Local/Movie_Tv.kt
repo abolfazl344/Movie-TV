@@ -11,6 +11,10 @@ data class Movie_Tv(
     val page: Int,
     @SerializedName("results")
     val results: List<Result>,
+    @SerializedName("cast")
+    val cast : List<Result>,
+    @SerializedName("crew")
+    val crew : List<Result>,
     @SerializedName("total_pages")
     val totalPages: Int,
     @SerializedName("total_results")

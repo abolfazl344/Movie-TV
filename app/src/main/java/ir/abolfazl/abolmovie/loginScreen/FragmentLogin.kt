@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.core.os.postDelayed
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,12 +43,9 @@ class FragmentLogin : Fragment() {
         }
 
         binding.txtSignUp.setOnClickListener {
-            findNavController().navigate(R.id.action_fragmentLogin_to_signUpFragment)
+            findNavController().navigate(R.id.to_fragmentSignUp)
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback {
-            requireActivity().finish()
-        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -54,18 +53,16 @@ class FragmentLogin : Fragment() {
         if (email.isNotEmpty() && password.isNotEmpty()) {
             loginScreenViewModel.loginUser(email, password)
             binding.layoutSignIn.visibility = View.VISIBLE
-            if (loginScreenViewModel.loginState) {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    binding.layoutSignIn.visibility = View.INVISIBLE
-                    findNavController().navigate(R.id.action_fragmentLogin_to_fragmentMain)
-                }, 1500)
-            } else {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    binding.layoutSignIn.visibility = View.INVISIBLE
+            Handler(Looper.getMainLooper()).postDelayed({
+                binding.layoutSignIn.visibility = View.INVISIBLE
+                if (loginScreenViewModel.loginState) {
+                    mainActivity().binding.bottomNavigation.selectedItemId = R.id.btn_Home_menu
+                    findNavController().navigate(R.id.to_fragmentMain)
+                } else {
                     binding.txtError.visibility = View.VISIBLE
-                    binding.txtError.text = "Email or Password is incorrect"
-                }, 1500)
-            }
+                    binding.txtError.text = loginScreenViewModel.exceptionLogin
+                }
+            }, 2000)
 
         } else {
             binding.layoutSignIn.visibility = View.INVISIBLE

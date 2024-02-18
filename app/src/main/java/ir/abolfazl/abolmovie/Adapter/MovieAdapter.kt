@@ -62,17 +62,18 @@ class MovieAdapter(private val data: ArrayList<Movie_Tv.Result>, val selectedIte
         notifyItemRangeInserted(startPosition,newData.size)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun refreshData(newData: List<Movie_Tv.Result>){
         data.clear()
         data.addAll(newData)
         notifyDataSetChanged()
     }
+    @SuppressLint("NotifyDataSetChanged")
     fun clearData(){
         data.clear()
         notifyDataSetChanged()
     }
     interface ItemSelected {
-
         fun itemSelected(movie: Movie_Tv.Result)
     }
 
