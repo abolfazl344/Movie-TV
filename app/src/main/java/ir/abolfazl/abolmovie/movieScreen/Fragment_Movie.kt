@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import ir.abolfazl.abolmovie.databinding.FragmentMovieBinding
@@ -78,14 +79,13 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
             val layoutManager =
                 GridLayoutManager(requireContext(), 3, LinearLayoutManager.VERTICAL, false)
             binding.recyclerShowMovie.layoutManager = layoutManager
-            //scrollRecycler(layoutManager)
-            //binding.recyclerShowMovie.recycledViewPool.setMaxRecycledViews(0, 0)
+            scrollRecycler(layoutManager)
+            binding.recyclerShowMovie.recycledViewPool.setMaxRecycledViews(0, 0)
         } else {
             movieAdapter.addData(data)
         }
     }
 
-    /*
     private fun scrollRecycler(layoutManager: GridLayoutManager) {
 
         binding.recyclerShowMovie.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -96,7 +96,7 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
                 if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= 20) {
                     Handler(Looper.getMainLooper()).postDelayed({
-                        discoverMovie(page)
+                        movieScreenViewModel.discoverMovie(page)
                         page++
                     }, 1500)
                 }
@@ -105,8 +105,6 @@ class FragmentMovie : Fragment(), MovieAdapter.ItemSelected {
         })
 
     }
-
-     */
 
     override fun itemSelected(movie: Movie_Tv.Result) {
         val action = FragmentMovieDirections.toDetailActivity(movie)

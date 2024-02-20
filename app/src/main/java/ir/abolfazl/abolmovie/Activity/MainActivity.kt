@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.btn_search_menu -> {
-                    findNavController(R.id.fragmentContainerView).navigate(R.id.to_fragmentSearch)
+                    findNavController(R.id.fragmentContainerView).navigate(R.id.to_fragmentExplore)
                 }
 
                 R.id.btn_Profile_menu -> {

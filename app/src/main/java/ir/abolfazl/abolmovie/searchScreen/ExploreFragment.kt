@@ -14,38 +14,37 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import ir.abolfazl.abolmovie.databinding.FragmentSearchBinding
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import ir.abolfazl.abolmovie.Adapter.MovieAdapter
-import ir.abolfazl.abolmovie.detailScreen.DetailFragment
-import ir.abolfazl.abolmovie.mainScreen.FragmentMainDirections
-import ir.abolfazl.abolmovie.serialScreen.FragmentSerialDirections
+import ir.abolfazl.abolmovie.R
+import ir.abolfazl.abolmovie.databinding.FragmentExploreBinding
+import ir.abolfazl.abolmovie.utils.Extensions.mainActivity
 import ir.abolfazl.abolmovie.utils.Extensions.showToast
 
 @AndroidEntryPoint
-class SearchFragment : Fragment(), MovieAdapter.ItemSelected {
-    lateinit var binding: FragmentSearchBinding
-    private lateinit var searchAdapter: MovieAdapter
-    private val searchScreenViewModel: SearchScreenViewModel by viewModels({requireActivity()})
+class ExploreFragment : Fragment(), MovieAdapter.ItemSelected {
+    lateinit var binding: FragmentExploreBinding
     private var backPressedCount = 0
+    private val exploreScreenViewModel: ExploreScreenViewModel by viewModels({ requireActivity() })
+    private lateinit var searchAdapter: MovieAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentSearchBinding.inflate(layoutInflater)
+    ): View {
+        binding = FragmentExploreBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        mainActivity().binding.bottomNavigation.visibility = View.VISIBLE
 
         binding.edtSearch.addTextChangedListener { txt ->
             if (txt.toString().isNotEmpty()) {
-                searchScreenViewModel.searchMovie(txt.toString())
-                searchScreenViewModel.searchMovies.observe(viewLifecycleOwner) {
-                    setupRecyclerView(binding.recyclerSearch,it.results)
+                exploreScreenViewModel.searchMulti(txt.toString())
+                exploreScreenViewModel.searchMovies.observe(viewLifecycleOwner) {
+                    setupRecyclerView(it.results)
                 }
                 if (!binding.recyclerSearch.isVisible) {
                     binding.recyclerSearch.visibility = View.VISIBLE
@@ -69,20 +68,20 @@ class SearchFragment : Fragment(), MovieAdapter.ItemSelected {
         }
     }
 
-    private fun setupRecyclerView(recyclerView: RecyclerView, data: List<Movie_Tv.Result>) {
+    private fun setupRecyclerView(data: List<Movie_Tv.Result>) {
         if (!::searchAdapter.isInitialized) {
             searchAdapter = MovieAdapter(ArrayList(data), this)
-            recyclerView.adapter = searchAdapter
-            recyclerView.layoutManager =
+            binding.recyclerSearch.adapter = searchAdapter
+            binding.recyclerSearch.layoutManager =
                 GridLayoutManager(requireContext(), 3, LinearLayoutManager.VERTICAL, false)
-            recyclerView.recycledViewPool.setMaxRecycledViews(0, 0)
+            binding.recyclerSearch.recycledViewPool.setMaxRecycledViews(0, 0)
         } else {
             searchAdapter.refreshData(data)
         }
     }
 
     override fun itemSelected(movie: Movie_Tv.Result) {
-        val action = SearchFragmentDirections.toDetailActivity(movie)
+        val action = ExploreFragmentDirections.toDetailActivity(movie)
         findNavController().navigate(action)
     }
 

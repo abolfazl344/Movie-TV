@@ -32,11 +32,8 @@ interface ApiService {
     @GET("tv/{series_id}/videos")
     fun getTvTrailer(@Path("series_id") series_id : Int) : Single<Trailer>
 
-    @GET("search/movie")
-    fun searchMovie(@Query("query") query:String) : Single<Movie_Tv>
-
-    @GET("search/tv")
-    fun searchTv(@Query("query") query:String) : Single<Movie_Tv>
+    @GET("search/multi")
+    fun searchMulti(@Query("query") query:String) : Single<Movie_Tv>
 
     @GET("tv/top_rated")
     fun getTopRatedTv(@Query("page") page:Int = 1) : Single<Movie_Tv>

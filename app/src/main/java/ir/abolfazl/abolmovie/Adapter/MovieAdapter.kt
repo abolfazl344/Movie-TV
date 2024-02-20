@@ -20,10 +20,21 @@ class MovieAdapter(private val data: ArrayList<Movie_Tv.Result>, val selectedIte
     inner class MainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bindData(movie: Movie_Tv.Result) {
+            var image = ""
+            if(movie.posterPath != null){
+                image = movie.posterPath
+                binding.txtRating.visibility = View.VISIBLE
+                binding.txtRating.text = movie.voteAverage.toString()
+            }else if(movie.profilePath != null){
+                image = movie.profilePath
+                binding.txtRating.visibility = View.INVISIBLE
+            }else if(movie.backdropPath != null){
+                image = movie.backdropPath
+            }
 
                 Glide
                     .with(itemView.context)
-                    .load(BASE_URL_IMAGE + movie.posterPath)
+                    .load(BASE_URL_IMAGE + image)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .apply(
                         RequestOptions()
@@ -31,8 +42,6 @@ class MovieAdapter(private val data: ArrayList<Movie_Tv.Result>, val selectedIte
                             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     )
                     .into(binding.imgItemMovie)
-
-            binding.txtRating.text = movie.voteAverage.toString()
 
             itemView.setOnClickListener {
                 selectedItem.itemSelected(movie)

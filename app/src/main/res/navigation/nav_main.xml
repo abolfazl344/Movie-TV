@@ -40,9 +40,10 @@
         android:label="FragmentSerial" />
 
     <fragment
-        android:id="@+id/searchFragment"
-        android:name="ir.abolfazl.abolmovie.searchScreen.SearchFragment"
-        android:label="SearchFragment"></fragment>
+        android:id="@+id/exploreFragment"
+        android:name="ir.abolfazl.abolmovie.searchScreen.ExploreFragment"
+        android:label="ExploreFragment"/>
+
     <fragment
         android:id="@+id/userFragment"
         android:name="ir.abolfazl.abolmovie.userScreen.UserFragment"
@@ -65,8 +66,8 @@
         app:destination="@id/userFragment" />
 
     <action
-        android:id="@+id/to_fragmentSearch"
-        app:destination="@id/searchFragment" />
+        android:id="@+id/to_fragmentExplore"
+        app:destination="@id/exploreFragment" />
 
     <action
         android:id="@+id/to_fragmentIntro"
@@ -108,5 +109,20 @@
     <action
         android:id="@+id/to_detailActivity"
         app:destination="@+id/detailActivity" />
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="ir.abolfazl.abolmovie.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" >
+    </fragment>
+
+    <action
+        android:id="@+id/to_searchFragment"
+        app:destination="@id/searchFragment"
+        app:enterAnim="@anim/slide_from_right"
+        app:exitAnim="@anim/slide_to_left"
+        app:popEnterAnim="@anim/slide_from_left"
+        app:popExitAnim="@anim/slide_to_right" />
 
 </navigation>

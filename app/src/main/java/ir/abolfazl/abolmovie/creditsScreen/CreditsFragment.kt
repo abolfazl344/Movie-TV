@@ -45,6 +45,7 @@ class CreditsFragment : Fragment(),MovieAdapter.ItemSelected {
         getPersonDetail(id)
         getPersonCredits(id)
 
+        /*
         binding.imgBackToHome.setOnClickListener {
             findNavController().navigate(R.id.action_creditsFragment_to_detailFragment)
         }
@@ -52,6 +53,8 @@ class CreditsFragment : Fragment(),MovieAdapter.ItemSelected {
         requireActivity().onBackPressedDispatcher.addCallback {
             findNavController().navigate(R.id.action_creditsFragment_to_detailFragment)
         }
+
+         */
     }
 
     private fun getPersonCredits(id: Int) {

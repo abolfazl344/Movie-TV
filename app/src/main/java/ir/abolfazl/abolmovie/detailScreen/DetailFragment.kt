@@ -45,7 +45,12 @@ class DetailFragment : Fragment(), MovieAdapter.ItemSelected, CastAdapter.ItemSe
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        loadDataDetail(detailViewModel.dataMovie)
+        if(detailViewModel.dataMovie.profilePath != null){
+            val action = DetailFragmentDirections.actionDetailFragmentToCreditsFragment(detailViewModel.dataMovie.id)
+            findNavController().navigate(action)
+        }else{
+            loadDataDetail(detailViewModel.dataMovie)
+        }
 
         binding.txtCrew.setOnClickListener {
             binding.txtCrew.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))

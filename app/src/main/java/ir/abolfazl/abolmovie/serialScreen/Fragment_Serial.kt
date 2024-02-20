@@ -1,6 +1,5 @@
 package ir.abolfazl.abolmovie.serialScreen
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,12 +13,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import ir.abolfazl.abolmovie.databinding.FragmentSerialBinding
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 import ir.abolfazl.abolmovie.Adapter.MovieAdapter
-import ir.abolfazl.abolmovie.detailScreen.DetailFragment
-import ir.abolfazl.abolmovie.mainScreen.FragmentMainDirections
 import ir.abolfazl.abolmovie.utils.Extensions.showToast
 
 @AndroidEntryPoint
@@ -81,13 +79,12 @@ class FragmentSerial : Fragment(), MovieAdapter.ItemSelected {
             val layoutManager =
                 GridLayoutManager(requireContext(), 3, LinearLayoutManager.VERTICAL, false)
             binding.recyclerShowSerial.layoutManager = layoutManager
-            //scrollRecycler(layoutManager)
+            scrollRecycler(layoutManager)
             binding.recyclerShowSerial.recycledViewPool.setMaxRecycledViews(0, 0)
         } else
             serialAdapter.addData(data)
     }
 
-    /*
     private fun scrollRecycler(layoutManager: GridLayoutManager) {
 
         binding.recyclerShowSerial.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -109,8 +106,6 @@ class FragmentSerial : Fragment(), MovieAdapter.ItemSelected {
         })
 
     }
-
-     */
 
     override fun itemSelected(movie: Movie_Tv.Result) {
         val action = FragmentSerialDirections.toDetailActivity(movie)

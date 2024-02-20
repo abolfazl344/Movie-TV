@@ -13,7 +13,7 @@ import ir.abolfazl.abolmovie.utils.Extensions.asyncRequest
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchScreenViewModel @Inject constructor(private val mainRepository: MainRepository) :
+class ExploreScreenViewModel @Inject constructor(private val mainRepository: MainRepository) :
     ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -21,10 +21,10 @@ class SearchScreenViewModel @Inject constructor(private val mainRepository: Main
     private val _searchMovies = MutableLiveData<Movie_Tv>()
     val searchMovies get() : LiveData<Movie_Tv> = _searchMovies
 
-    fun searchMovie(title: String) {
+    fun searchMulti(title: String) {
 
         mainRepository
-            .searchMovie(title)
+            .searchMulti(title)
             .asyncRequest()
             .subscribe(object : SingleObserver<Movie_Tv> {
                 override fun onSubscribe(d: Disposable) {

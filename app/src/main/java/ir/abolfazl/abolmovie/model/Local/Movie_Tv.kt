@@ -33,7 +33,9 @@ data class Movie_Tv(
         @SerializedName("popularity")
         val popularity: Double?,
         @SerializedName("poster_path")
-        val posterPath: String?,
+        val posterPath: String? = null,
+        @SerializedName("profile_path")
+        val profilePath: String? = null,
         @SerializedName("release_date")
         val releaseDate: String? = null,
         @SerializedName("first_air_date")

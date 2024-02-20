@@ -52,9 +52,9 @@ class MainRepository @Inject constructor(private val apiService: ApiService) {
         return apiService.getTvTrailer(serialID)
     }
 
-    fun searchMovie(title : String) : Single<Movie_Tv>{
+    fun searchMulti(title : String) : Single<Movie_Tv>{
 
-        return apiService.searchMovie(title)
+        return apiService.searchMulti(title)
     }
 
     fun getCreditsMovie(movieID: Int) : Single<Credits>{

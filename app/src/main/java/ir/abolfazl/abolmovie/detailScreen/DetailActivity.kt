@@ -3,8 +3,10 @@ package ir.abolfazl.abolmovie.detailScreen
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.navigation.findNavController
 import androidx.navigation.navArgs
 import dagger.hilt.android.AndroidEntryPoint
+import ir.abolfazl.abolmovie.R
 import ir.abolfazl.abolmovie.databinding.ActivityDetailBinding
 import ir.abolfazl.abolmovie.model.Local.Movie_Tv
 
@@ -19,8 +21,8 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         dataMovie = args.dataMovie
+
         detailViewModel.dataMovie = dataMovie
 
         if (dataMovie.releaseDate != null) {
